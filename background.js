@@ -63,6 +63,15 @@ const initItems = [{
             selector: '#sidebar',
             checked: false
         }]
+    },
+    {
+        name: '微信官方文档',
+        host: 'developers.weixin.qq.com',
+        hiddenDoms: [{
+            name: '顶部菜单栏',
+            selector: '#app > div > div > header',
+            checked: false
+        }]
     }
 ]
 
