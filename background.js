@@ -1,53 +1,70 @@
 const initItems = [{
-    name: '数据中台',
-    hiddenDoms: [{
-        name: '菜单栏',
-        selector: '#app > div.main.theme-telBlue > div.main-sider.menu-scrollbar',
-        checked: true
+        name: '数据中台',
+        host: 'localhost',
+        hiddenDoms: [{
+            name: '菜单栏',
+            selector: '#app > div.main.theme-telBlue > div.main-sider.menu-scrollbar',
+            checked: true
+        }, {
+            name: '顶栏',
+            selector: '#app > div.main.theme-telBlue > div.main-header',
+            checked: true
+        }]
     }, {
-        name: '顶栏',
-        selector: '#app > div.main.theme-telBlue > div.main-header',
-        checked: true
-    }]
-}, {
-    name: 'dolphin',
-    hiddenDoms: [{
-        name: '菜单栏',
-        selector: 'body > div.main-layout-model > div.m-bottom > div > div.secondary-menu-model',
-        checked: true
+        name: 'dolphin',
+        host: 'localhost',
+        hiddenDoms: [{
+            name: '菜单栏',
+            selector: 'body > div.main-layout-model > div.m-bottom > div > div.secondary-menu-model',
+            checked: true
+        }, {
+            name: '顶栏',
+            selector: 'body > div.main-layout-model > div.m-top',
+            checked: true
+        }]
     }, {
-        name: '顶栏',
-        selector: 'body > div.main-layout-model > div.m-top',
-        checked: true
-    }]
-}, {
-    name: 'douban',
-    hiddenDoms: [{
-        name: '菜单栏',
-        selector: '#db-global-nav',
-        checked: true
-    }, {
-        name: 'logo栏',
-        selector: '#db-nav-sns',
-        checked: true
-    }, {
-        name: '图片',
-        selector: 'img',
-        checked: true
-    }, {
-        name: '右下角广告',
-        selector: '#dale_explore_home_middle_right',
-        checked: true
-    }, {
-        name: 'h1大标题',
-        selector: 'h1',
-        checked: true
-    }, {
-        name: '小组导航栏',
-        selector: '#db-nav-group',
-        checked: false
-    }]
-}]
+        name: 'douban',
+        host: 'douban.com',
+        hiddenDoms: [{
+            name: '菜单栏',
+            selector: '#db-global-nav',
+            checked: true
+        }, {
+            name: 'logo栏',
+            selector: '#db-nav-sns',
+            checked: true
+        }, {
+            name: '图片',
+            selector: 'img',
+            checked: true
+        }, {
+            name: '右下角广告',
+            selector: '#dale_explore_home_middle_right',
+            checked: true
+        }, {
+            name: 'h1大标题',
+            selector: 'h1',
+            checked: true
+        }, {
+            name: '小组导航栏',
+            selector: '#db-nav-group',
+            checked: false
+        }]
+    },
+    {
+        name: '腾讯云',
+        host: 'cloud.tencent.com',
+        hiddenDoms: [{
+            name: '顶部菜单栏',
+            selector: '#topnav',
+            checked: false
+        }, {
+            name: '左侧菜单栏',
+            selector: '#sidebar',
+            checked: false
+        }]
+    }
+]
 
 // // 打开新的tab页
 // chrome.tabs.onCreated.addListener((tab) => {

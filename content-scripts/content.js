@@ -12,9 +12,12 @@ chrome.runtime.sendMessage({
     const items = JSON.parse(response);
     console.log('chameleon 初始化', items);
     items.forEach(item => {
-        item.hiddenDoms.forEach(hiddenDom => {
-            handleHiddenDom(hiddenDom)
-        })
+        // 只处理能匹配host的
+        if (location.host.endsWith(item.host)) {
+            item.hiddenDoms.forEach(hiddenDom => {
+                handleHiddenDom(hiddenDom)
+            })
+        }
     })
 });
 
