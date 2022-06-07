@@ -1,4 +1,13 @@
 const initItems = [{
+        name: '通用',
+        host: '',
+        hiddenDoms: [{
+            name: '图片',
+            selector: 'img',
+            checked: true
+        }]
+    },
+    {
         name: '数据中台',
         host: 'localhost',
         hiddenDoms: [{
@@ -10,7 +19,8 @@ const initItems = [{
             selector: '#app > div.main.theme-telBlue > div.main-header',
             checked: true
         }]
-    }, {
+    },
+    {
         name: 'dolphin',
         host: 'localhost',
         hiddenDoms: [{
@@ -22,7 +32,8 @@ const initItems = [{
             selector: 'body > div.main-layout-model > div.m-top',
             checked: true
         }]
-    }, {
+    },
+    {
         name: 'douban',
         host: 'douban.com',
         hiddenDoms: [{
@@ -70,6 +81,23 @@ const initItems = [{
         hiddenDoms: [{
             name: '顶部菜单栏',
             selector: '#app > div > div > header',
+            checked: false
+        }]
+    },
+    {
+        name: 'V2EX',
+        host: 'v2ex.com',
+        hiddenDoms: [{
+            name: '顶部菜单栏',
+            selector: '#Top',
+            checked: false
+        }, {
+            name: '图片',
+            selector: 'img',
+            checked: false
+        }, {
+            name: '右边栏',
+            selector: '#Rightbar',
             checked: false
         }]
     }
