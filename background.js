@@ -85,6 +85,15 @@ const initItems = [{
         }]
     },
     {
+        name: '微信公众平台',
+        host: 'mp.weixin.qq.com',
+        hiddenDoms: [{
+            name: '顶部菜单栏',
+            selector: '#mp_header',
+            checked: false
+        }]
+    },
+    {
         name: 'V2EX',
         host: 'v2ex.com',
         hiddenDoms: [{
