@@ -1,121 +1,8 @@
-const initItems = [{
-        name: '通用',
-        host: '',
-        hiddenDoms: [{
-            name: '图片',
-            selector: 'img',
-            checked: true
-        }]
-    },
-    {
-        name: '数据中台',
-        host: 'localhost',
-        hiddenDoms: [{
-            name: '菜单栏',
-            selector: '#app > div.main.theme-telBlue > div.main-sider.menu-scrollbar',
-            checked: true
-        }, {
-            name: '顶栏',
-            selector: '#app > div.main.theme-telBlue > div.main-header',
-            checked: true
-        }]
-    },
-    {
-        name: 'dolphin',
-        host: 'localhost',
-        hiddenDoms: [{
-            name: '菜单栏',
-            selector: 'body > div.main-layout-model > div.m-bottom > div > div.secondary-menu-model',
-            checked: true
-        }, {
-            name: '顶栏',
-            selector: 'body > div.main-layout-model > div.m-top',
-            checked: true
-        }]
-    },
-    {
-        name: 'douban',
-        host: 'douban.com',
-        hiddenDoms: [{
-            name: '菜单栏',
-            selector: '#db-global-nav',
-            checked: true
-        }, {
-            name: 'logo栏',
-            selector: '#db-nav-sns',
-            checked: true
-        }, {
-            name: '图片',
-            selector: 'img',
-            checked: true
-        }, {
-            name: '右下角广告',
-            selector: '#dale_explore_home_middle_right',
-            checked: true
-        }, {
-            name: 'h1大标题',
-            selector: 'h1',
-            checked: true
-        }, {
-            name: '小组导航栏',
-            selector: '#db-nav-group',
-            checked: false
-        }]
-    },
-    {
-        name: '腾讯云',
-        host: 'cloud.tencent.com',
-        hiddenDoms: [{
-            name: '顶部菜单栏',
-            selector: '#topnav',
-            checked: false
-        }, {
-            name: '左侧菜单栏',
-            selector: '#sidebar',
-            checked: false
-        }]
-    },
-    {
-        name: '微信官方文档',
-        host: 'developers.weixin.qq.com',
-        hiddenDoms: [{
-            name: '顶部菜单栏',
-            selector: '#app > div > div > header',
-            checked: false
-        }]
-    },
-    {
-        name: '微信公众平台',
-        host: 'mp.weixin.qq.com',
-        hiddenDoms: [{
-            name: '顶部菜单栏',
-            selector: '#mp_header',
-            checked: false
-        }]
-    },
-    {
-        name: 'V2EX',
-        host: 'v2ex.com',
-        hiddenDoms: [{
-            name: '顶部菜单栏',
-            selector: '#Top',
-            checked: false
-        }, {
-            name: '图片',
-            selector: 'img',
-            checked: false
-        }, {
-            name: '右边栏',
-            selector: '#Rightbar',
-            checked: false
-        }]
-    }
-]
-
 // // 打开新的tab页
 // chrome.tabs.onCreated.addListener((tab) => {
 //     dispacheTab(tab.id)
 // });
+
 
 // 切换tab页
 chrome.tabs.onActivated.addListener(
@@ -160,7 +47,10 @@ chrome.runtime.onMessage.addListener(
             }, function (tabs) {
                 console.log('background 查询到tabs', tabs);
                 chrome.tabs.sendMessage(
-                    tabs[0].id, request.data,
+                    tabs[0].id, {
+                        hiddenDom,
+                        host: item.host
+                    },
                     function (response) {
                         // window.close();
                         console.log(response);
@@ -177,10 +67,10 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
-async function loadItems() {
-    return new Promise(function (resolve, reject) {
-        chrome.storage.sync.get(null, function (result) {
-            console.log('background 查询缓存', result);
+function loadItems() {
+    return new Promise(function (resolve) {
+        chrome.storage.sync.get(null, async function (result) {
+            const initItems = await loadItemsFromDb();
             const items = JSON.parse(JSON.stringify(initItems))
             // merge 用户设置
             items.forEach(item => {
@@ -190,6 +80,32 @@ async function loadItems() {
                 })
             })
             resolve(items)
+        })
+    })
+}
+
+function loadItemsFromDb() {
+    return new Promise(function (resolve) {
+        chrome.storage.session.get(['chameleon_website'], function (result) {
+            if (result.chameleon_website) {
+                resolve(result.chameleon_website)
+            } else {
+                fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'query-chameleon'
+                    })
+                }).then(res => res.json()).then(data => {
+                    chrome.storage.session.set({
+                        'chameleon_website': data
+                    }, function () {
+                        resolve(data)
+                    })
+                })
+            }
         })
     })
 }
