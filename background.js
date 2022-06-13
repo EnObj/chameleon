@@ -131,7 +131,8 @@ function dispacheTab(tabId) {
             item.hiddenDoms.forEach(hiddenDom => {
                 chrome.tabs.sendMessage(
                     tabId, {
-                        hiddenDom
+                        hiddenDom,
+                        host: item.host
                     }
                 );
             })
