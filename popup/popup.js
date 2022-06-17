@@ -19,22 +19,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, _this.items.map(item => {
                     return h('div', {
                         attrs: {
-                            class: 'item p-2'
+                            class: 'item p-2 border-t'
                         }
-                    }, [h('div', {}, item.name), h('div', {
+                    }, [h('div', {
+                        attrs: {
+                            class: 'item text-base mb-1'
+                        }
+                    }, item.name), h('div', {
                         attrs: {
                             class: 'hidden-doms'
                         }
                     }, item.hiddenDoms.map(hiddenDom => {
                         return h('div', {
                             attrs: {
-                                class: 'hidden-dom'
+                                class: 'hidden-dom flex items-center'
                             }
                         }, [h('input', {
                             attrs: {
-                                class: 'hidden-dom-checkbox',
+                                class: 'hidden-dom-checkbox mr-1',
                                 type: 'checkbox',
-                                checked: hiddenDom.checked
+                                checked: hiddenDom.checked,
+                                id: item._id + hiddenDom.name
                             },
                             on: {
                                 change(event) {
@@ -42,7 +47,11 @@ document.addEventListener('DOMContentLoaded', function () {
                                     _this.switchHiddenDom(event, hiddenDom, item)
                                 }
                             }
-                        }, []), hiddenDom.name])
+                        }, []), h('label', {
+                            attrs: {
+                                for: item._id + hiddenDom.name
+                            }
+                        }, [hiddenDom.name])])
                     }))])
                 }))]
             )
