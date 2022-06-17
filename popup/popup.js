@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 [h('div', {
                     attrs: {
-                        class: 'items'
+                        class: 'items bg-green-50'
                     }
                 }, _this.items.map(item => {
                     return h('div', {
