@@ -52,38 +52,50 @@ document.addEventListener('DOMContentLoaded', function () {
                             attrs: {
                                 class: 'item p-2 border-t'
                             }
-                        }, [h('div', {
-                            attrs: {
-                                class: 'item text-base mb-1'
-                            }
-                        }, item.name), h('div', {
-                            attrs: {
-                                class: 'hidden-doms'
-                            }
-                        }, item.hiddenDoms.map(hiddenDom => {
-                            return h('div', {
-                                attrs: {
-                                    class: 'hidden-dom flex items-center'
-                                }
-                            }, [h('input', {
-                                attrs: {
-                                    class: 'hidden-dom-checkbox mr-1',
-                                    type: 'checkbox',
-                                    checked: hiddenDom.checked,
-                                    id: item._id + hiddenDom.name
-                                },
-                                on: {
-                                    change(event) {
-                                        hiddenDom.checked = !!event.target.checked
-                                        _this.switchHiddenDom(event, hiddenDom, item)
+                        }, [
+                            h('div', {
+                                    attrs: {
+                                        class: 'item text-base mb-1'
                                     }
-                                }
-                            }, []), h('label', {
+                                },
+                                [
+                                    item.name,
+                                    h('div', {
+                                        attrs: {
+                                            class: 'text-gray-500 text-sm'
+                                        }
+                                    }, [item.host])
+                                ]
+                            ),
+                            h('div', {
                                 attrs: {
-                                    for: item._id + hiddenDom.name
+                                    class: 'hidden-doms'
                                 }
-                            }, [hiddenDom.name])])
-                        }))])
+                            }, item.hiddenDoms.map(hiddenDom => {
+                                return h('div', {
+                                    attrs: {
+                                        class: 'hidden-dom flex items-center'
+                                    }
+                                }, [h('input', {
+                                    attrs: {
+                                        class: 'hidden-dom-checkbox mr-1',
+                                        type: 'checkbox',
+                                        checked: hiddenDom.checked,
+                                        id: item._id + hiddenDom.name
+                                    },
+                                    on: {
+                                        change(event) {
+                                            hiddenDom.checked = !!event.target.checked
+                                            _this.switchHiddenDom(event, hiddenDom, item)
+                                        }
+                                    }
+                                }, []), h('label', {
+                                    attrs: {
+                                        for: item._id + hiddenDom.name
+                                    }
+                                }, [hiddenDom.name])])
+                            }))
+                        ])
                     }))
                 ]
             )
