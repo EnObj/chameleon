@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const vue = new Vue({
         data: {
-            items: []
+            items: [],
+            refreshItems: false
         },
         computed: {},
         render: function (h) {
@@ -9,51 +10,82 @@ document.addEventListener('DOMContentLoaded', function () {
             return h(
                 'div', {
                     attrs: {
-                        class: 'w-40 h-80 pb-1 body'
+                        class: 'w-60 h-80 pb-1 body'
                     }
                 },
-                [h('div', {
-                    attrs: {
-                        class: 'items bg-green-50'
-                    }
-                }, _this.items.map(item => {
-                    return h('div', {
+                [
+                    h('div', {
                         attrs: {
-                            class: 'item p-2 border-t'
+                            class: 'flex items-center justify-between p-2 overflow-hidden'
                         }
-                    }, [h('div', {
-                        attrs: {
-                            class: 'item text-base mb-1'
-                        }
-                    }, item.name), h('div', {
-                        attrs: {
-                            class: 'hidden-doms'
-                        }
-                    }, item.hiddenDoms.map(hiddenDom => {
-                        return h('div', {
+                    }, [
+                        h('div', {
                             attrs: {
-                                class: 'hidden-dom flex items-center'
+                                class: 'bg-green-50'
                             }
-                        }, [h('input', {
+                        }, ['chameleon']),
+                        h('button', {
                             attrs: {
-                                class: 'hidden-dom-checkbox mr-1',
-                                type: 'checkbox',
-                                checked: hiddenDom.checked,
-                                id: item._id + hiddenDom.name
+                                class: 'bg-gray-200 px-2 py-1'
                             },
                             on: {
-                                change(event) {
-                                    hiddenDom.checked = !!event.target.checked
-                                    _this.switchHiddenDom(event, hiddenDom, item)
+                                click: () => {
+                                    _this.refreshItems = true
+                                    _this.items = []
+                                    chrome.runtime.sendMessage({
+                                        action: 'loadItemsFromDb',
+                                    }, function (response) {
+                                        console.log(response, chrome.runtime.lastError);
+                                        _this.items = JSON.parse(response)
+                                        _this.refreshItems = false
+                                    });
                                 }
                             }
-                        }, []), h('label', {
+                        }, ['刷新' + (_this.refreshItems ? '...' : '')])
+                    ]),
+                    h('div', {
+                        attrs: {
+                            class: 'items'
+                        }
+                    }, _this.items.map(item => {
+                        return h('div', {
                             attrs: {
-                                for: item._id + hiddenDom.name
+                                class: 'item p-2 border-t'
                             }
-                        }, [hiddenDom.name])])
-                    }))])
-                }))]
+                        }, [h('div', {
+                            attrs: {
+                                class: 'item text-base mb-1'
+                            }
+                        }, item.name), h('div', {
+                            attrs: {
+                                class: 'hidden-doms'
+                            }
+                        }, item.hiddenDoms.map(hiddenDom => {
+                            return h('div', {
+                                attrs: {
+                                    class: 'hidden-dom flex items-center'
+                                }
+                            }, [h('input', {
+                                attrs: {
+                                    class: 'hidden-dom-checkbox mr-1',
+                                    type: 'checkbox',
+                                    checked: hiddenDom.checked,
+                                    id: item._id + hiddenDom.name
+                                },
+                                on: {
+                                    change(event) {
+                                        hiddenDom.checked = !!event.target.checked
+                                        _this.switchHiddenDom(event, hiddenDom, item)
+                                    }
+                                }
+                            }, []), h('label', {
+                                attrs: {
+                                    for: item._id + hiddenDom.name
+                                }
+                            }, [hiddenDom.name])])
+                        }))])
+                    }))
+                ]
             )
         },
         watch: {},

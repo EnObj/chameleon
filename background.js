@@ -63,6 +63,12 @@ chrome.runtime.onMessage.addListener(
             })
             // 保持通道开放
             return true
+        } else if (request.action == 'loadItemsFromDb') {
+            loadItemsFromDb(items => {
+                sendResponse(JSON.stringify(items))
+            })
+            // 保持通道开放
+            return true
         }
     }
 );
@@ -70,7 +76,7 @@ chrome.runtime.onMessage.addListener(
 function loadItems() {
     return new Promise(function (resolve) {
         chrome.storage.sync.get(null, async function (result) {
-            const initItems = await loadItemsFromDb();
+            const initItems = await loadItemsWithCache();
             const items = JSON.parse(JSON.stringify(initItems))
             // merge 用户设置
             items.forEach(item => {
@@ -84,28 +90,32 @@ function loadItems() {
     })
 }
 
-function loadItemsFromDb() {
+function loadItemsWithCache() {
     return new Promise(function (resolve) {
         chrome.storage.session.get(['chameleon_website'], function (result) {
             if (result.chameleon_website) {
                 resolve(result.chameleon_website)
             } else {
-                fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        action: 'query-chameleon'
-                    })
-                }).then(res => res.json()).then(data => {
-                    chrome.storage.session.set({
-                        'chameleon_website': data
-                    }, function () {
-                        resolve(data)
-                    })
-                })
+                loadItemsFromDb(resolve)
             }
+        })
+    })
+}
+
+function loadItemsFromDb(resolve) {
+    fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            action: 'query-chameleon'
+        })
+    }).then(res => res.json()).then(data => {
+        chrome.storage.session.set({
+            'chameleon_website': data
+        }, function () {
+            resolve(data)
         })
     })
 }
