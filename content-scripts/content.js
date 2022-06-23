@@ -18,7 +18,7 @@ chrome.runtime.sendMessage({
 function handleHiddenDom(hiddenDom, host) {
     if (location.host.endsWith(host)) {
         console.log(host, hiddenDom);
-        const styleId = 'chameleon-' + hiddenDom.name
+        const styleId = 'chameleon1-' + hiddenDom.name
         // 移除
         if (!hiddenDom.checked) {
             return $('#' + styleId).remove();
@@ -36,7 +36,7 @@ function handleHiddenDom(hiddenDom, host) {
 function handleStyle(style, host) {
     if (location.host.endsWith(host)) {
         console.log(host, style);
-        const styleId = 'chameleon-' + style.name
+        const styleId = 'chameleon2-' + style.name
         // 移除
         if (!style.checked) {
             return $('#' + styleId).remove();
