@@ -95,6 +95,14 @@ chrome.runtime.onMessage.addListener(
             })
             // 保持通道开放
             return true
+        } else if (request.action == 'switchAll') {
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function (tabs) {
+                console.log('background 查询到tabs', tabs);
+                dispacheTab(tabs[0].id)
+            });
         }
     }
 );
