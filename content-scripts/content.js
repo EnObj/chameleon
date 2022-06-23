@@ -22,9 +22,15 @@ chrome.runtime.sendMessage({
 function handleHiddenDom(hiddenDom, host) {
     if (location.host.endsWith(host)) {
         console.log(host, hiddenDom);
-        const style = `<style>
+        const styleId = 'chameleon-' + hiddenDom.name
+        // 移除
+        if (hiddenDom.checked) {
+            return $('#' + styleId).remove();
+        }
+        // 或添加
+        const style = `<style id="${styleId}">
             ${hiddenDom.selector}{
-                display: ${hiddenDom.checked ? 'initial' : 'none'}
+                display: none
             }
         </style>`
         $('head').append(style)
