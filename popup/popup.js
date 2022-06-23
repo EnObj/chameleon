@@ -94,6 +94,34 @@ document.addEventListener('DOMContentLoaded', function () {
                                         for: item._id + hiddenDom.name
                                     }
                                 }, [hiddenDom.name])])
+                            })),
+                            h('div', {
+                                attrs: {
+                                    class: 'styles'
+                                }
+                            }, (item.styles || []).map(style => {
+                                return h('div', {
+                                    attrs: {
+                                        class: 'style flex items-center bg-green-50'
+                                    }
+                                }, [h('input', {
+                                    attrs: {
+                                        class: 'style-checkbox mr-1',
+                                        type: 'checkbox',
+                                        checked: style.checked,
+                                        id: item._id + style.name
+                                    },
+                                    on: {
+                                        change(event) {
+                                            style.checked = !!event.target.checked
+                                            _this.switchStyle(event, style, item)
+                                        }
+                                    }
+                                }, []), h('label', {
+                                    attrs: {
+                                        for: item._id + style.name
+                                    }
+                                }, [style.name])])
                             }))
                         ])
                     }))
@@ -122,7 +150,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         item
                     }
                 }, function (response) {
-                    console.log(response.farewell);
+                    console.log(response);
+                });
+            },
+            switchStyle(event, style, item) {
+                console.log(event, style, item);
+                // 交给background处理
+                chrome.runtime.sendMessage({
+                    action: 'switchStyle',
+                    data: {
+                        style,
+                        item
+                    }
+                }, function (response) {
+                    console.log(response);
                 });
             }
         }

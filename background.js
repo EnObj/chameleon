@@ -31,7 +31,33 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         console.log('background 收到消息', request);
         // 切换
-        if (request.action == 'switchHiddenDom') {
+        if (request.action == 'switchStyle') {
+            const {
+                item,
+                style
+            } = request.data
+            // 本地存储用户设置
+            chrome.storage.sync.set({
+                [`items-${item.name}-style-${style.name}-checked`]: style.checked
+            })
+            // 使设置作用到页面
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function (tabs) {
+                console.log('background 查询到tabs', tabs);
+                chrome.tabs.sendMessage(
+                    tabs[0].id, {
+                        style,
+                        host: item.host
+                    },
+                    function (response) {
+                        // window.close();
+                        console.log(response);
+                    }
+                );
+            });
+        } else if (request.action == 'switchHiddenDom') {
             const {
                 item,
                 hiddenDom
