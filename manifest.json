@@ -16,6 +16,7 @@
         "matches": [
             "<all_urls>"
         ],
+        "run_at": "document_start",
         "js": ["js/jquery-3.6.0.min.js", "content-scripts/content.js"]
     }],
     "background": {
