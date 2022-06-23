@@ -21,10 +21,12 @@ chrome.runtime.sendMessage({
 
 function handleHiddenDom(hiddenDom, host) {
     if (location.host.endsWith(host)) {
-        if (hiddenDom.checked) {
-            $(hiddenDom.selector).show()
-        } else {
-            $(hiddenDom.selector).hide()
-        }
+        console.log(host, hiddenDom);
+        const style = `<style>
+            ${hiddenDom.selector}{
+                display: ${hiddenDom.checked ? 'initial' : 'none'}
+            }
+        </style>`
+        $('head').append(style)
     }
 }
