@@ -86,36 +86,46 @@ const workOnEle = function ($, ele, list, seletor, ref) {
         // console.log(current)
         ref = current.attr("href");
     }
-    const count = list.length;
-    current.children().each((index, child) => {
+    let tagIndex = 0
+    current.contents().each((index, child) => {
         // console.log(child)
-        if (child.children.length > 0) {
-            workOnEle(
-                $,
-                child,
-                list,
-                seletor + ">" + child.tagName + ":nth-child(" + (index + 1) + ")",
-                ref
-            );
-        } else {
-            if (child.innerText.trim()) {
-                list.push({
-                    type: "text",
-                    content: child.innerText.trim(),
-                    selector: seletor,
-                    ref: ref,
-                    insideId: "e" + (list.length + 1),
-                });
-            }
+        switch (child.nodeType) {
+            case 1:
+                tagIndex++
+                const childSeletor = seletor + '>' + child.tagName + ':nth-child(' + tagIndex + ')'
+                const startDiv = {
+                    type: 'div',
+                    selector: childSeletor,
+                    insideId: 'e' + (list.length + 1)
+                }
+                const startDivIndex = list.length
+                list.push(startDiv)
+                workOnEle($, child, list, childSeletor, ref)
+                // 判断多层嵌套
+                if (list[list.length - 1] == startDiv) {
+                    list.splice(list.length - 1, 1)
+                } else if (list[startDivIndex + 1] == list[list.length - 1] || list[startDivIndex + 1].type == 'div' && list[startDivIndex + 1].selector == list[list.length - 1].selector) {
+                    list.splice(startDivIndex, 1)
+                } else {
+                    list.push({
+                        type: '/div',
+                        selector: childSeletor,
+                        insideId: 'e' + (list.length + 1)
+                    })
+                }
+                break;
+            case 3:
+                const text = child.data.trim()
+                if (text) {
+                    list.push({
+                        type: 'text',
+                        content: text,
+                        selector: seletor,
+                        ref: ref,
+                        insideId: 'e' + (list.length + 1)
+                    })
+                }
+                break;
         }
-    });
-    if (list.length == count && ele.innerText.trim()) {
-        list.push({
-            type: "text",
-            content: ele.innerText.trim(),
-            selector: seletor,
-            ref: ref,
-            insideId: "e" + (list.length + 1),
-        });
-    }
+    })
 };

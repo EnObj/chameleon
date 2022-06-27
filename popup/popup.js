@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }, _this.page.list.map(item => {
                         return h('div', {
                             class: 'page-item',
+                            style: `padding-left: ${item.depth*10}px;`
                         }, [h('input', {
                             attrs: {
                                 class: 'hidden-dom-checkbox mr-1',
@@ -199,6 +200,15 @@ document.addEventListener('DOMContentLoaded', function () {
                                             },
                                             function (response) {
                                                 // window.close();
+                                                let depth = 0
+                                                response.list.forEach((item, index) => {
+                                                    item.depth = depth
+                                                    if (item.type == 'div') {
+                                                        depth++
+                                                    } else if (item.type == '/div') {
+                                                        depth--
+                                                    }
+                                                })
                                                 _this.page = response;
                                             }
                                         );
@@ -208,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }, ['创建'])
                     ]),
                     h('div', {
-                        class: 'flex-auto h-full'
+                        class: 'flex-auto h-full overflow-hidden'
                     }, [_this.currentNav == 'mine' ? contentMine : contentCreate])
                 ]
             )
