@@ -95,11 +95,8 @@ chrome.runtime.onMessage.addListener(
             return true
         } else if (request.action == 'reloadItems') {
             // 加载数据库中的
-            loadItems(true).then(items => {
-                // 记载用户本地的
-                loadLocalItem().then(localItems => {
-                    sendResponse(JSON.stringify(items.concat(localItems)))
-                })
+            loadItems(true).then(function (items) {
+                sendResponse(JSON.stringify(items))
             })
             // 保持通道开放
             return true

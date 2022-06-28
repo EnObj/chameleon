@@ -17,14 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 class: 'content-mine h-full'
             }, [
                 h('div', {
-                    attrs: {
-                        class: 'flex items-center justify-between p-2 overflow-hidden'
-                    }
+                    class: 'flex items-center justify-between p-2 overflow-hidden'
                 }, [
                     h('div', {
-                        attrs: {
-                            class: 'bg-green-50'
-                        }
+                        class: 'bg-green-50'
                     }, ['chameleon']),
                     h('button', {
                         attrs: {
