@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
             currentNav: 'mine',
             page: {
                 list: [],
-                title: ''
+                title: '',
+                url: ''
             },
         },
         computed: {},
@@ -30,17 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             class: 'bg-gray-200 px-2 py-1'
                         },
                         on: {
-                            click: () => {
-                                _this.refreshItems = true
-                                _this.items = []
-                                chrome.runtime.sendMessage({
-                                    action: 'loadItemsFromDb',
-                                }, function (response) {
-                                    console.log(response, chrome.runtime.lastError);
-                                    _this.items = JSON.parse(response)
-                                    _this.refreshItems = false
-                                });
-                            }
+                            click: _this.refresh
                         }
                     }, ['刷新' + (_this.refreshItems ? '...' : '')])
                 ]),
@@ -73,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             attrs: {
                                 class: 'hidden-doms'
                             }
-                        }, item.hiddenDoms.map(hiddenDom => {
+                        }, (item.hiddenDoms || []).map(hiddenDom => {
                             return h('div', {
                                 attrs: {
                                     class: 'hidden-dom flex items-center'
@@ -155,8 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                         selector: item.selector,
                                         name: item.insideId
                                     }, {
-                                        host: '',
-                                        name: '当前页面'
+                                        id: _this.page.url,
+                                        host: new URL(_this.page.url).host,
+                                        name: _this.page.title,
+                                        type: 'local'
                                     })
                                 }
                             }
@@ -181,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             class: "nav nav-mine cursor-pointer",
                             on: {
                                 click() {
-                                    _this.currentNav = 'mine'
+                                    _this.currentNav = 'mine';
                                 }
                             }
                         }, ['我的']),
@@ -190,29 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             on: {
                                 click() {
                                     _this.currentNav = 'create'
-                                    chrome.tabs.query({
-                                        active: true,
-                                        currentWindow: true
-                                    }, function (tabs) {
-                                        chrome.tabs.sendMessage(
-                                            tabs[0].id, {
-                                                action: 'loadDocument'
-                                            },
-                                            function (response) {
-                                                // window.close();
-                                                let depth = 0
-                                                response.list.forEach((item, index) => {
-                                                    item.depth = depth
-                                                    if (item.type == 'div') {
-                                                        depth++
-                                                    } else if (item.type == '/div') {
-                                                        depth--
-                                                    }
-                                                })
-                                                _this.page = response;
-                                            }
-                                        );
-                                    });
                                 }
                             }
                         }, ['创建'])
@@ -223,7 +193,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 ]
             )
         },
-        watch: {},
+        watch: {
+            currentNav(val) {
+                if (val == 'mine') {
+                    this.refresh()
+                } else if (val == 'create') {
+                    this.loadDom()
+                }
+            }
+        },
         created() {
             // 加载用户设置
             const _this = this;
@@ -235,6 +213,51 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         },
         methods: {
+            loadDom() {
+                const _this = this
+                chrome.tabs.query({
+                    active: true,
+                    currentWindow: true
+                }, function (tabs) {
+                    chrome.tabs.sendMessage(
+                        tabs[0].id, {
+                            action: 'loadDocument'
+                        },
+                        function (response) {
+                            let depth = 0
+                            response.list.forEach((item, index) => {
+                                item.depth = depth
+                                if (item.type == 'div') {
+                                    depth++
+                                } else if (item.type == '/div') {
+                                    depth--
+                                }
+                            })
+                            _this.page = response;
+                            chrome.runtime.sendMessage({
+                                action: 'createLocalItem',
+                                localItem: {
+                                    id: _this.page.url,
+                                    host: new URL(_this.page.url).host,
+                                    name: _this.page.title
+                                }
+                            });
+                        }
+                    );
+                });
+            },
+            refresh() {
+                this.refreshItems = true
+                this.items = []
+                const _this = this
+                chrome.runtime.sendMessage({
+                    action: 'reloadItems',
+                }, function (response) {
+                    console.log(response, chrome.runtime.lastError);
+                    _this.items = JSON.parse(response)
+                    _this.refreshItems = false
+                });
+            },
             switchHiddenDom(event, hiddenDom, item) {
                 console.log(event, hiddenDom, item);
                 // 交给background处理
@@ -244,8 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         hiddenDom,
                         item
                     }
-                }, function (response) {
-                    console.log(response);
                 });
             },
             switchStyle(event, style, item) {
@@ -257,8 +278,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         style,
                         item
                     }
-                }, function (response) {
-                    console.log(response);
                 });
             }
         }

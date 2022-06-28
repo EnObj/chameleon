@@ -83,15 +83,23 @@ chrome.runtime.onMessage.addListener(
                     }
                 );
             });
+            // 保存本地item
+            if (item.type == 'local') {
+                saveLocalItemHiddenDom(item, hiddenDom);
+            }
         } else if (request.action == 'loadItems') {
             loadItems().then(function (items) {
                 sendResponse(JSON.stringify(items))
             })
             // 保持通道开放
             return true
-        } else if (request.action == 'loadItemsFromDb') {
-            loadItemsFromDb(items => {
-                sendResponse(JSON.stringify(items))
+        } else if (request.action == 'reloadItems') {
+            // 加载数据库中的
+            loadItems(true).then(items => {
+                // 记载用户本地的
+                loadLocalItem().then(localItems => {
+                    sendResponse(JSON.stringify(items.concat(localItems)))
+                })
             })
             // 保持通道开放
             return true
@@ -103,21 +111,34 @@ chrome.runtime.onMessage.addListener(
                 console.log('background 查询到tabs', tabs);
                 dispacheTab(tabs[0].id)
             });
+        } else if (request.action == 'createLocalItem') {
+            createLocalItem(request.localItem)
         }
     }
 );
 
-function loadItems() {
+function loadItems(fromDb) {
     return new Promise(function (resolve) {
         chrome.storage.sync.get(null, async function (result) {
-            const initItems = await loadItemsWithCache();
-            const items = JSON.parse(JSON.stringify(initItems))
+            let initItems = [];
+            if (fromDb) {
+                initItems = await loadItemsFromDb();
+            } else {
+                initItems = await loadItemsWithCache();
+            }
+            const localItems = await loadLocalItem()
+            console.log(initItems, localItems);
+            const items = initItems.concat(localItems)
             // merge 用户设置
             items.forEach(item => {
-                item.hiddenDoms.forEach(hiddenDom => {
+                (item.hiddenDoms || []).forEach(hiddenDom => {
                     const value = result[`items-${item.name}-hiddenDom-${hiddenDom.name}-checked`]
                     hiddenDom.checked = value === undefined ? hiddenDom.checked : value
-                })
+                });
+                (item.styles || []).forEach(style => {
+                    const value = result[`items-${item.name}-style-${style.name}-checked`]
+                    style.checked = value === undefined ? style.checked : value
+                });
             })
             resolve(items)
         })
@@ -130,26 +151,74 @@ function loadItemsWithCache() {
             if (result.chameleon_website) {
                 resolve(result.chameleon_website)
             } else {
-                loadItemsFromDb(resolve)
+                loadItemsFromDb().then(resolve)
             }
         })
     })
 }
 
-function loadItemsFromDb(resolve) {
-    fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            action: 'query-chameleon'
+function loadItemsFromDb() {
+    return new Promise(function (resolve) {
+        fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'query-chameleon'
+            })
+        }).then(res => res.json()).then(data => {
+            chrome.storage.session.set({
+                'chameleon_website': data
+            }, function () {
+                resolve(data)
+            })
         })
-    }).then(res => res.json()).then(data => {
-        chrome.storage.session.set({
-            'chameleon_website': data
-        }, function () {
-            resolve(data)
+    })
+}
+
+function loadLocalItem() {
+    return new Promise(function (resolve) {
+        chrome.storage.session.get(['chameleon_website_local'], function (result) {
+            resolve(result.chameleon_website_local || [])
         })
+    })
+}
+
+function createLocalItem(localItem) {
+    let localItems = []
+    chrome.storage.session.get(['chameleon_website_local'], function (result) {
+        if (result.chameleon_website_local) {
+            localItems = result.chameleon_website_local
+        }
+        // 不存在
+        if (!localItems.find(item => item.id == localItem.id)) {
+            localItems.push(localItem)
+            // 更新存储
+            chrome.storage.session.set({
+                'chameleon_website_local': localItems
+            })
+        }
+    })
+}
+
+function saveLocalItemHiddenDom(localItem, hiddenDom) {
+    chrome.storage.session.get(['chameleon_website_local'], function (result) {
+        const localItems = result.chameleon_website_local
+
+        localItem = localItems.find(item => item.id == localItem.id);
+        const hiddenDoms = localItem.hiddenDoms || []
+
+        // 不存在
+        if (!hiddenDoms.find(item => item.name == hiddenDom.name)) {
+            hiddenDoms.push(hiddenDom)
+            localItem.hiddenDoms = hiddenDoms
+            console.log(localItems);
+            // 更新存储
+            chrome.storage.session.set({
+                'chameleon_website_local': localItems
+            })
+        }
+
     })
 }

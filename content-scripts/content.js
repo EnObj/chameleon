@@ -8,6 +8,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         sendResponse({
             list: list,
             title: $("title").text().trim(),
+            url: location.href
         });
     }
     if (request.hiddenDom) {
