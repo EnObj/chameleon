@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         class: "navs bg-gray-50 p-2 flex-none"
                     }, [
                         h('div', {
-                            class: "nav nav-mine cursor-pointer",
+                            class: "nav nav-mine cursor-pointer p-2",
                             on: {
                                 click() {
                                     _this.currentNav = 'mine';
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, ['我的']),
                         h('div', {
-                            class: "nav nav-create cursor-pointer",
+                            class: "nav nav-create cursor-pointer p-2",
                             on: {
                                 click() {
                                     _this.currentNav = 'create'
