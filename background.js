@@ -13,12 +13,19 @@ chrome.tabs.onActivated.addListener(
 
 function dispacheTab(tabId) {
     loadItems().then(function (items) {
-        // merge 用户设置
         items.forEach(item => {
             item.hiddenDoms.forEach(hiddenDom => {
                 chrome.tabs.sendMessage(
                     tabId, {
                         hiddenDom,
+                        host: item.host
+                    }
+                );
+            })
+            item.styles.forEach(style => {
+                chrome.tabs.sendMessage(
+                    tabId, {
+                        style,
                         host: item.host
                     }
                 );
@@ -128,11 +135,13 @@ function loadItems(fromDb) {
             const items = initItems.concat(localItems)
             // merge 用户设置
             items.forEach(item => {
-                (item.hiddenDoms || []).forEach(hiddenDom => {
+                item.hiddenDoms = item.hiddenDoms || []
+                item.hiddenDoms.forEach(hiddenDom => {
                     const value = result[`items-${item.name}-hiddenDom-${hiddenDom.name}-checked`]
                     hiddenDom.checked = value === undefined ? hiddenDom.checked : value
                 });
-                (item.styles || []).forEach(style => {
+                item.styles = item.styles || []
+                item.styles.forEach(style => {
                     const value = result[`items-${item.name}-style-${style.name}-checked`]
                     style.checked = value === undefined ? style.checked : value
                 });
