@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             currentTab: {
                 url: ''
-            }
+            },
+            clipPageItems: []
         },
         computed: {},
         render: function (h) {
@@ -140,11 +141,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     _this.page.title,
                     h('div', {
                         class: 'page-items'
-                    }, _this.page.list.filter(item => item.type != '/div').map(item => {
-                        return h('div', {
-                            class: 'page-item',
-                            style: `padding-left: ${item.depth*10}px;`
-                        }, [h('input', {
+                    }, _this.page.list.filter(item => {
+                        // 关闭标签不显示
+                        if (item.type == '/div') {
+                            return false
+                        }
+                        // 手动隐藏的容器子元素不显示
+                        return _this.clipPageItems.every(clipPageItem => {
+                            return clipPageItem == item.insideId || !item.insideId.startsWith(clipPageItem)
+                        })
+                    }).map(item => {
+                        const pageItem = [h('input', {
                             attrs: {
                                 class: 'hidden-dom-checkbox mr-1',
                                 type: 'checkbox',
@@ -169,7 +176,25 @@ document.addEventListener('DOMContentLoaded', function () {
                             attrs: {
                                 for: item.insideId
                             }
-                        }, [item.content])])
+                        }, [item.content])]
+                        if (item.type == 'div') {
+                            pageItem.push(h('span', {
+                                on: {
+                                    click() {
+                                        // 隐藏此元素的子元素
+                                        if (_this.clipPageItems.includes(item.insideId)) {
+                                            _this.clipPageItems.splice(_this.clipPageItems.indexOf(item.insideId), 1)
+                                        } else {
+                                            _this.clipPageItems.push(item.insideId)
+                                        }
+                                    }
+                                }
+                            }, '点我折叠'))
+                        }
+                        return h('div', {
+                            class: 'page-item hover:bg-gray-100',
+                            style: `padding-left: ${item.depth*10}px;`
+                        }, pageItem)
                     }))
                 ])
             ]);
