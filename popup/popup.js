@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: '',
                 url: ''
             },
+            currentTab: {
+                url: ''
+            }
         },
         computed: {},
         render: function (h) {
@@ -37,10 +40,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         style: 'height: calc(100% - 42px);'
                     }
                 }, _this.items.map(item => {
+                    const isFit = new URL(_this.currentTab.url).host.endsWith(item.host)
+                    const itemHeader = [
+                        item.name,
+                    ]
+                    if (isFit) {
+                        itemHeader.unshift(h('img', {
+                            attrs: {
+                                src: "./imgs/logo.png",
+                                class: 'block mr-1',
+                                style: 'block; width: 20px;height:20px;'
+                            }
+                        }))
+                    }
                     return h('div', {
-                        attrs: {
-                            class: 'item p-2 border-t hover:bg-gray-100'
-                        }
+                        class: 'item p-2 border-t hover:bg-gray-50'
                     }, [
                         h('div', {
                                 attrs: {
@@ -48,7 +62,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             },
                             [
-                                item.name,
+                                h('div', {
+                                    class: 'flex items-center'
+                                }, itemHeader),
                                 h('div', {
                                     attrs: {
                                         class: 'text-gray-500 text-sm'
@@ -201,6 +217,12 @@ document.addEventListener('DOMContentLoaded', function () {
         created() {
             // 加载用户设置
             const _this = this;
+            chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            }, function (tabs) {
+                _this.currentTab.url = tabs[0].url
+            })
             chrome.runtime.sendMessage({
                 action: 'loadItems',
             }, function (response) {
