@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }, (item.hiddenDoms || []).map(hiddenDom => {
                             return h('div', {
                                 attrs: {
-                                    class: 'hidden-dom flex items-center'
+                                    class: 'hidden-dom flex items-center hover:bg-gray-200'
                                 }
                             }, [h('input', {
                                 attrs: {
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 [
                     h('div', {
-                        class: "navs bg-gray-300 p-2 flex-none"
+                        class: "navs bg-gray-300 p-2 flex-none text-center"
                     }, [
                         h('div', {
                             class: "nav nav-mine cursor-pointer p-2 hover:text-gray-700",
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     _this.currentNav = 'create'
                                 }
                             }
-                        }, ['创建'])
+                        }, ['DIY'])
                     ]),
                     h('div', {
                         class: 'flex-auto h-full overflow-hidden'
