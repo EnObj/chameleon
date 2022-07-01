@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, _this.items.map(item => {
                     return h('div', {
                         attrs: {
-                            class: 'item p-2 border-t'
+                            class: 'item p-2 border-t hover:bg-gray-100'
                         }
                     }, [
                         h('div', {
@@ -160,14 +160,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             return h(
                 'div', {
-                    class: 'w-80 h-96 pb-1 body flex items-stretch overflow-hidden'
+                    class: 'w-80 h-96 body flex items-stretch overflow-hidden'
                 },
                 [
                     h('div', {
-                        class: "navs bg-gray-50 p-2 flex-none"
+                        class: "navs bg-gray-300 p-2 flex-none"
                     }, [
                         h('div', {
-                            class: "nav nav-mine cursor-pointer p-2",
+                            class: "nav nav-mine cursor-pointer p-2 hover:text-gray-700",
                             on: {
                                 click() {
                                     _this.currentNav = 'mine';
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, ['我的']),
                         h('div', {
-                            class: "nav nav-create cursor-pointer p-2",
+                            class: "nav nav-create cursor-pointer p-2 hover:text-gray-700",
                             on: {
                                 click() {
                                     _this.currentNav = 'create'
