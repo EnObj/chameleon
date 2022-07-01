@@ -3,13 +3,12 @@
 //     dispacheTab(tab.id)
 // });
 
-
 // 切换tab页
-chrome.tabs.onActivated.addListener(
-    activeInfo => {
-        dispacheTab(activeInfo.tabId)
-    }
-)
+// chrome.tabs.onActivated.addListener(
+//     activeInfo => {
+//         dispacheTab(activeInfo.tabId)
+//     }
+// )
 
 function dispacheTab(tabId) {
     loadItems().then(function (items) {
