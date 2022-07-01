@@ -3,7 +3,11 @@ console.log('i am chameleon.');
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log(request);
     if (request.action == 'loadDocument') {
-        const list = []
+        const list = [{
+            type: 'div',
+            selector: 'body',
+            insideId: 'e0'
+        }]
         workOnEle($, $("body"), list, "body");
         sendResponse({
             list: list,
@@ -65,6 +69,8 @@ function handleStyle(style, host) {
 
 // 解析并递归子节点，输出图文
 const workOnEle = function ($, ele, list, seletor, ref) {
+    // 最后一个是父元素
+    const parent = list[list.length - 1];
     // console.log(ele)
     const current = $(ele);
     if (["script", "style"].includes(ele.tagName)) {
@@ -78,7 +84,7 @@ const workOnEle = function ($, ele, list, seletor, ref) {
                 type: ele.tagName,
                 content: src,
                 selector: seletor,
-                insideId: "e" + (list.length + 1),
+                insideId: parent.insideId + '-e1',
             });
         }
         return;
@@ -94,24 +100,27 @@ const workOnEle = function ($, ele, list, seletor, ref) {
             case 1:
                 tagIndex++
                 const childSeletor = seletor + '>' + child.tagName + ':nth-child(' + tagIndex + ')'
+                // 开始递归标签
                 const startDiv = {
                     type: 'div',
                     selector: childSeletor,
-                    insideId: 'e' + (list.length + 1)
+                    insideId: parent.insideId + '-ea' + index
                 }
                 const startDivIndex = list.length
                 list.push(startDiv)
                 workOnEle($, child, list, childSeletor, ref)
-                // 判断多层嵌套
+                // 如果没有递归到子元素，移除开始递归标签
                 if (list[list.length - 1] == startDiv) {
                     list.splice(list.length - 1, 1)
                 } else if (list[startDivIndex + 1] == list[list.length - 1] || list[startDivIndex + 1].type == 'div' && list[startDivIndex + 1].selector == list[list.length - 1].selector) {
+                    // 子元素就一个，还是个开始递归标签，那么移除此开始递归标签
                     list.splice(startDivIndex, 1)
                 } else {
+                    // 结束递归标签
                     list.push({
                         type: '/div',
                         selector: childSeletor,
-                        insideId: 'e' + (list.length + 1)
+                        insideId: parent.insideId + '-eb' + index
                     })
                 }
                 break;
@@ -123,7 +132,7 @@ const workOnEle = function ($, ele, list, seletor, ref) {
                         content: text,
                         selector: seletor,
                         ref: ref,
-                        insideId: 'e' + (list.length + 1)
+                        insideId: parent.insideId + '-e' + index
                     })
                 }
                 break;

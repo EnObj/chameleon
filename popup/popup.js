@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     _this.page.title,
                     h('div', {
                         class: 'page-items'
-                    }, _this.page.list.map(item => {
+                    }, _this.page.list.filter(item => item.type != '/div').map(item => {
                         return h('div', {
                             class: 'page-item',
                             style: `padding-left: ${item.depth*10}px;`
@@ -242,6 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             action: 'loadDocument'
                         },
                         function (response) {
+                            console.log(response);
                             let depth = 0
                             response.list.forEach((item, index) => {
                                 item.depth = depth
