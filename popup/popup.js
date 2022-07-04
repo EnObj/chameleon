@@ -44,17 +44,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     const isFit = new URL(_this.currentTab.url).host.endsWith(item.host)
                     const itemHeader = [
                         h('div', {
-                            class: 'flex-auto text-base'
+                            class: 'text-base'
                         }, [item.name])
                     ]
                     if (isFit) {
-                        itemHeader.push(h('img', {
+                        itemHeader.push(h('div', {
+                            class: 'flex-auto ml-1'
+                        }, [h('img', {
                             attrs: {
                                 src: "./imgs/logo.png",
-                                class: 'block mr-1',
-                                style: 'block; width: 20px;height:20px;'
+                                style: 'width: 20px;height:20px;'
                             }
-                        }))
+                        })]))
                     }
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
