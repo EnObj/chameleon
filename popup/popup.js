@@ -43,7 +43,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 }, _this.items.map(item => {
                     const isFit = new URL(_this.currentTab.url).host.endsWith(item.host)
                     const itemHeader = [
-                        item.name,
+                        h('div', {
+                            class: 'flex-auto text-base'
+                        }, [item.name])
                     ]
                     if (isFit) {
                         itemHeader.unshift(h('img', {
@@ -54,12 +56,32 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }))
                     }
+                    // 只有本地的才可以删除和重命名
+                    if (item.type == 'local') {
+                        itemHeader.push(h('div', {}, [
+                            h('button', {
+                                on: {
+                                    click(event) {
+                                        _this.deleteLocalItem(event, item);
+                                    }
+                                }
+                            }, ['删除']),
+                            ' ',
+                            h('button', {
+                                on: {
+                                    click(event) {
+                                        _this.renameLocalItem(event, item);
+                                    }
+                                }
+                            }, ['重命名'])
+                        ]))
+                    }
                     return h('div', {
                         class: 'item p-2 border-t hover:bg-gray-50'
                     }, [
                         h('div', {
                                 attrs: {
-                                    class: 'item text-base mb-1'
+                                    class: 'item mb-1'
                                 }
                             },
                             [
@@ -78,28 +100,55 @@ document.addEventListener('DOMContentLoaded', function () {
                                 class: 'hidden-doms'
                             }
                         }, (item.hiddenDoms || []).map(hiddenDom => {
+                            const hiddenDomChildren = [
+                                h('div', {}, [
+                                    h('input', {
+                                        attrs: {
+                                            class: 'hidden-dom-checkbox mr-1',
+                                            type: 'checkbox',
+                                            checked: hiddenDom.checked,
+                                            id: item._id + hiddenDom.name
+                                        },
+                                        on: {
+                                            change(event) {
+                                                hiddenDom.checked = !!event.target.checked
+                                                _this.switchHiddenDom(event, hiddenDom, item)
+                                            }
+                                        }
+                                    }, []),
+                                    h('label', {
+                                        attrs: {
+                                            for: item._id + hiddenDom.name
+                                        }
+                                    }, [hiddenDom.name])
+                                ])
+
+                            ]
+                            // 只有本地的才可以删除和重命名
+                            if (item.type == 'local') {
+                                hiddenDomChildren.push(h('div', {}, [
+                                    h('button', {
+                                        on: {
+                                            click(event) {
+                                                _this.deleteLocalHiddenDom(event, hiddenDom, item);
+                                            }
+                                        }
+                                    }, ['删除']),
+                                    ' ',
+                                    h('button', {
+                                        on: {
+                                            click(event) {
+                                                _this.renameLocalHiddenDom(event, hiddenDom, item);
+                                            }
+                                        }
+                                    }, ['重命名'])
+                                ]))
+                            }
                             return h('div', {
                                 attrs: {
-                                    class: 'hidden-dom flex items-center hover:bg-gray-200'
+                                    class: 'hidden-dom flex items-center hover:bg-gray-200 justify-between'
                                 }
-                            }, [h('input', {
-                                attrs: {
-                                    class: 'hidden-dom-checkbox mr-1',
-                                    type: 'checkbox',
-                                    checked: hiddenDom.checked,
-                                    id: item._id + hiddenDom.name
-                                },
-                                on: {
-                                    change(event) {
-                                        hiddenDom.checked = !!event.target.checked
-                                        _this.switchHiddenDom(event, hiddenDom, item)
-                                    }
-                                }
-                            }, []), h('label', {
-                                attrs: {
-                                    for: item._id + hiddenDom.name
-                                }
-                            }, [hiddenDom.name])])
+                            }, hiddenDomChildren)
                         })),
                         h('div', {
                             attrs: {
@@ -214,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     _this.currentNav = 'mine';
                                 }
                             }
-                        }, ['我的']),
+                        }, ['变色龙']),
                         h('div', {
                             class: "nav nav-create cursor-pointer p-2 hover:text-gray-700",
                             on: {
@@ -323,7 +372,73 @@ document.addEventListener('DOMContentLoaded', function () {
                         item
                     }
                 });
-            }
+            },
+            deleteLocalHiddenDom(event, hiddenDom, item) {
+                console.log(event, hiddenDom, item);
+                const _this = this
+                if (confirm('确认删除吗')) {
+                    // 交给background处理
+                    chrome.runtime.sendMessage({
+                        action: 'deleteLocalHiddenDom',
+                        data: {
+                            hiddenDom,
+                            item
+                        }
+                    }, function (response) {
+                        console.log('deleted', response);
+                        _this.refresh()
+                    });
+                }
+            },
+            renameLocalHiddenDom(event, hiddenDom, item) {
+                console.log(event, hiddenDom, item);
+                const _this = this
+                const newName = prompt('请输入新名称', hiddenDom.name)
+                // 交给background处理
+                chrome.runtime.sendMessage({
+                    action: 'renameLocalHiddenDom',
+                    data: {
+                        hiddenDom,
+                        item,
+                        newName
+                    }
+                }, function (response) {
+                    console.log('renamed', response);
+                    _this.refresh()
+                });
+            },
+            deleteLocalItem(event, item) {
+                console.log(event, item);
+                const _this = this
+                if (confirm('确认删除吗')) {
+                    // 交给background处理
+                    chrome.runtime.sendMessage({
+                        action: 'deleteLocalItem',
+                        data: {
+                            item
+                        }
+                    }, function (response) {
+                        console.log('deleted', response);
+                        _this.refresh()
+                    });
+                }
+            },
+            renameLocalItem(event, item) {
+                console.log(event, item);
+                const _this = this
+                const newName = prompt('请输入新名称', item.name)
+                // 交给background处理
+                chrome.runtime.sendMessage({
+                    action: 'renameLocalItem',
+                    data: {
+                        item,
+                        newName
+                    }
+                }, function (response) {
+                    console.log('renameed', response);
+                    _this.refresh()
+                });
+            },
         }
     });
 

@@ -116,6 +116,32 @@ chrome.runtime.onMessage.addListener(
             });
         } else if (request.action == 'createLocalItem') {
             createLocalItem(request.localItem)
+        } else if (request.action == 'deleteLocalHiddenDom') {
+            const {
+                item,
+                hiddenDom
+            } = request.data
+            deleteLocalHiddenDom(hiddenDom, item).then(sendResponse)
+            return true
+        } else if (request.action == 'renameLocalHiddenDom') {
+            const {
+                item,
+                hiddenDom,
+                newName,
+            } = request.data
+            renameLocalHiddenDom(hiddenDom, item, newName).then(sendResponse)
+        } else if (request.action == 'deleteLocalItem') {
+            const {
+                item,
+            } = request.data
+            deleteLocalItem(item).then(sendResponse)
+            return true
+        } else if (request.action == 'renameLocalItem') {
+            const {
+                item,
+                newName,
+            } = request.data
+            renameLocalItem(item, newName).then(sendResponse)
         }
     }
 );
@@ -130,6 +156,10 @@ function loadItems(fromDb) {
                 initItems = await loadItemsWithCache();
             }
             const localItems = await loadLocalItem()
+            // 标识一下是本地的
+            localItems.forEach(item => {
+                item.type = 'local'
+            })
             console.log(initItems, localItems);
             const items = initItems.concat(localItems)
             // merge 用户设置
@@ -208,6 +238,37 @@ function createLocalItem(localItem) {
     })
 }
 
+function deleteLocalItem(localItem) {
+    return new Promise(function (resolve) {
+        chrome.storage.local.get(['chameleon_website_local'], function (result) {
+            const localItems = result.chameleon_website_local
+
+            localItems.splice(localItems.findIndex(item => item.id == localItem.id), 1);
+            // 更新存储
+            chrome.storage.local.set({
+                'chameleon_website_local': localItems
+            }, resolve)
+        })
+    })
+}
+
+function renameLocalItem(localItem, newName) {
+    return new Promise(function (resolve) {
+        chrome.storage.local.get(['chameleon_website_local'], function (result) {
+            const localItems = result.chameleon_website_local
+
+            localItem = localItems.find(item => item.id == localItem.id);
+            localItem.name = newName
+
+            // 更新存储
+            chrome.storage.local.set({
+                'chameleon_website_local': localItems
+            }, resolve)
+
+        })
+    })
+}
+
 function saveLocalItemHiddenDom(localItem, hiddenDom) {
     chrome.storage.local.get(['chameleon_website_local'], function (result) {
         const localItems = result.chameleon_website_local
@@ -225,6 +286,42 @@ function saveLocalItemHiddenDom(localItem, hiddenDom) {
                 'chameleon_website_local': localItems
             })
         }
+    })
+}
 
+function deleteLocalHiddenDom(hiddenDom, localItem) {
+    return new Promise(function (resolve) {
+        chrome.storage.local.get(['chameleon_website_local'], function (result) {
+            const localItems = result.chameleon_website_local
+
+            localItem = localItems.find(item => item.id == localItem.id);
+            const hiddenDoms = localItem.hiddenDoms || []
+
+            hiddenDoms.splice(hiddenDoms.findIndex(item => item.name == hiddenDom.name), 1)
+            // 更新存储
+            chrome.storage.local.set({
+                'chameleon_website_local': localItems
+            }, resolve)
+        })
+    })
+}
+
+function renameLocalHiddenDom(hiddenDom, localItem, newName) {
+    return new Promise(function (resolve) {
+        chrome.storage.local.get(['chameleon_website_local'], function (result) {
+            const localItems = result.chameleon_website_local
+
+            localItem = localItems.find(item => item.id == localItem.id);
+            const hiddenDoms = localItem.hiddenDoms || []
+
+            const targetHidddenDom = hiddenDoms.find(item => item.name == hiddenDom.name);
+            targetHidddenDom.name = newName
+
+            // 更新存储
+            chrome.storage.local.set({
+                'chameleon_website_local': localItems
+            }, resolve)
+
+        })
     })
 }
