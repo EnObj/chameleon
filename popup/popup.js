@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }, [item.name])
                     ]
                     if (isFit) {
-                        itemHeader.unshift(h('img', {
+                        itemHeader.push(h('img', {
                             attrs: {
                                 src: "./imgs/logo.png",
                                 class: 'block mr-1',
