@@ -173,6 +173,7 @@ function loadItemsFromDb() {
                 action: 'query-chameleon'
             })
         }).then(res => res.json()).then(data => {
+            // 缓存到session
             chrome.storage.session.set({
                 'chameleon_website': data
             }, function () {
@@ -184,7 +185,7 @@ function loadItemsFromDb() {
 
 function loadLocalItem() {
     return new Promise(function (resolve) {
-        chrome.storage.session.get(['chameleon_website_local'], function (result) {
+        chrome.storage.local.get(['chameleon_website_local'], function (result) {
             resolve(result.chameleon_website_local || [])
         })
     })
@@ -192,7 +193,7 @@ function loadLocalItem() {
 
 function createLocalItem(localItem) {
     let localItems = []
-    chrome.storage.session.get(['chameleon_website_local'], function (result) {
+    chrome.storage.local.get(['chameleon_website_local'], function (result) {
         if (result.chameleon_website_local) {
             localItems = result.chameleon_website_local
         }
@@ -200,7 +201,7 @@ function createLocalItem(localItem) {
         if (!localItems.find(item => item.id == localItem.id)) {
             localItems.push(localItem)
             // 更新存储
-            chrome.storage.session.set({
+            chrome.storage.local.set({
                 'chameleon_website_local': localItems
             })
         }
@@ -208,7 +209,7 @@ function createLocalItem(localItem) {
 }
 
 function saveLocalItemHiddenDom(localItem, hiddenDom) {
-    chrome.storage.session.get(['chameleon_website_local'], function (result) {
+    chrome.storage.local.get(['chameleon_website_local'], function (result) {
         const localItems = result.chameleon_website_local
 
         localItem = localItems.find(item => item.id == localItem.id);
@@ -220,7 +221,7 @@ function saveLocalItemHiddenDom(localItem, hiddenDom) {
             localItem.hiddenDoms = hiddenDoms
             console.log(localItems);
             // 更新存储
-            chrome.storage.session.set({
+            chrome.storage.local.set({
                 'chameleon_website_local': localItems
             })
         }
