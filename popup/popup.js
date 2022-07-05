@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: ''
             },
             currentTab: {
-                url: ''
+                url: '',
+                id: 0
             },
             clipPageItems: []
         },
@@ -246,7 +247,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         return h('div', {
                             class: 'page-item hover:bg-gray-100',
-                            style: `padding-left: ${item.depth*10}px;`
+                            style: `padding-left: ${item.depth*10}px;`,
+                            on: {
+                                mouseenter(event) {
+                                    console.log('mouseenter', event, item);
+                                    _this.highLightDom(item, true)
+                                },
+                                mouseleave(event) {
+                                    console.log('mouseleave', event, item);
+                                    _this.highLightDom(item, false)
+                                }
+                            }
                         }, pageItem)
                     }))
                 ])
@@ -300,6 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentWindow: true
             }, function (tabs) {
                 _this.currentTab.url = tabs[0].url
+                _this.currentTab.id = tabs[0].id
             })
             chrome.runtime.sendMessage({
                 action: 'loadItems',
@@ -443,6 +455,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     _this.refresh()
                 });
             },
+            highLightDom(pageItem, checked) {
+                const _this = this;
+                chrome.tabs.sendMessage(
+                    _this.currentTab.id, {
+                        style: {
+                            doms: [{
+                                name: pageItem.insideId,
+                                css: 'border: 2px gray solid;box-sizing: border-box',
+                                selector: pageItem.selector,
+                            }],
+                            name: '高亮',
+                            checked
+                        },
+                        host: new URL(_this.page.url).host,
+                    },
+                    function (response) {
+                        // window.close();
+                        console.log(response);
+                    }
+                );
+            }
         }
     });
 
