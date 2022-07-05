@@ -68,7 +68,7 @@ function handleStyle(style, host) {
 }
 
 // 解析并递归子节点，输出图文
-const workOnEle = function ($, ele, list, seletor, ref) {
+function workOnEle($, ele, list, seletor, ref) {
     // 最后一个是父元素
     const parent = list[list.length - 1];
     // console.log(ele)
