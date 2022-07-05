@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ]
                     if (isFit) {
                         itemHeader.push(h('div', {
-                            class: 'flex-auto ml-1'
+                            class: 'ml-1'
                         }, [h('img', {
                             attrs: {
                                 src: "./imgs/logo.png",
@@ -59,7 +59,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
-                        itemHeader.push(h('div', {}, [
+                        itemHeader.push(h('div', {
+                            class: 'flex-auto text-right'
+                        }, [
                             h('button', {
                                 on: {
                                     click(event) {
@@ -229,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }, [item.content])]
                         if (item.type == 'div') {
                             pageItem.push(h('span', {
+                                class: 'text-green-500 cursor-pointer',
                                 on: {
                                     click() {
                                         // 隐藏此元素的子元素
