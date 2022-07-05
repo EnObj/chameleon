@@ -45,12 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     const isFit = new URL(_this.currentTab.url).host.endsWith(item.host)
                     const itemHeader = [
                         h('div', {
-                            class: 'text-base'
+                            class: 'text-base truncate'
                         }, [item.name])
                     ]
                     if (isFit) {
                         itemHeader.push(h('div', {
-                            class: 'ml-1'
+                            class: 'mx-1 flex-none'
                         }, [h('img', {
                             attrs: {
                                 src: "./imgs/logo.png",
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
                         itemHeader.push(h('div', {
-                            class: 'flex-auto text-right'
+                            class: 'flex-initial text-right ml-1'
                         }, [
                             h('button', {
                                 on: {
