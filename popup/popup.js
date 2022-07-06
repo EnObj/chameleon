@@ -327,7 +327,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         class: "navs bg-gray-300 p-2 flex-none text-center"
                     }, [
                         h('div', {
-                            class: "nav nav-mine cursor-pointer p-2 hover:text-gray-700",
+                            class: {
+                                "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
+                                "bg-green-50": _this.currentNav == 'mine'
+                            },
                             on: {
                                 click() {
                                     _this.currentNav = 'mine';
@@ -335,7 +338,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, ['变色龙']),
                         h('div', {
-                            class: "nav nav-create cursor-pointer p-2 hover:text-gray-700",
+                            class: {
+                                "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
+                                "bg-green-50": _this.currentNav == 'create'
+                            },
                             on: {
                                 click() {
                                     _this.currentNav = 'create'
