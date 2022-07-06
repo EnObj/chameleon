@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
                         itemHeader.push(h('div', {
-                            class: 'flex-initial text-right ml-1'
+                            class: 'flex-auto text-right ml-1'
                         }, [
                             h('button', {
                                 on: {
