@@ -120,7 +120,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, (item.hiddenDoms || []).map(hiddenDom => {
                             const hiddenDomChildren = [
-                                h('div', {}, [
+                                h('div', {
+                                    class: 'truncate mr-1'
+                                }, [
                                     h('input', {
                                         attrs: {
                                             class: 'hidden-dom-checkbox mr-1',
@@ -145,8 +147,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             ]
                             // 只有本地的才可以删除和重命名
                             if (item.type == 'local') {
-                                hiddenDomChildren.push(h('div', {}, [
+                                hiddenDomChildren.push(h('div', {
+                                    class: 'flex-none'
+                                }, [
                                     h('button', {
+                                        class: 'mr-1 bg-red-50',
                                         on: {
                                             click(event) {
                                                 _this.deleteLocalHiddenDom(event, hiddenDom, item);
