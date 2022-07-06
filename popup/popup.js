@@ -270,8 +270,11 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         }, [item.content])]
                         if (item.type == 'div') {
-                            pageItem.push(h('span', {
-                                class: 'text-green-500 cursor-pointer',
+                            pageItem.unshift(h('img', {
+                                attrs: {
+                                    src: `./imgs/${!_this.clipPageItems.includes(item.insideId) ? 'arrow-down-s-fill' : 'arrow-right-s-fill'}.png`,
+                                    style: 'width: 15px;height:15px;'
+                                },
                                 on: {
                                     click() {
                                         // 隐藏此元素的子元素
@@ -282,10 +285,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                         }
                                     }
                                 }
-                            }, '点我折叠'))
+                            }))
+                        } else {
+                            pageItem.unshift(h('div', {
+                                style: 'width: 15px;height:15px;'
+                            }))
                         }
                         return h('div', {
-                            class: 'page-item hover:bg-gray-100',
+                            class: 'page-item hover:bg-gray-100 flex items-center',
                             style: `padding-left: ${item.depth*10}px;`,
                             on: {
                                 mouseenter(event) {
@@ -449,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(event, hiddenDom, item);
                 const _this = this
                 const newName = prompt('请输入新名称', hiddenDom.name)
-                if(newName){
+                if (newName) {
                     // 交给background处理
                     chrome.runtime.sendMessage({
                         action: 'renameLocalHiddenDom',
@@ -484,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(event, item);
                 const _this = this
                 const newName = prompt('请输入新名称', item.name)
-                if(newName){
+                if (newName) {
                     // 交给background处理
                     chrome.runtime.sendMessage({
                         action: 'renameLocalItem',
