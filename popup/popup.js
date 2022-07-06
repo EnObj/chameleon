@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             })]),
                             h('button', {
-                                class: 'mr-1',
                                 on: {
                                     click(event) {
                                         _this.renameLocalItem(event, item);
@@ -167,13 +166,18 @@ document.addEventListener('DOMContentLoaded', function () {
                                     class: 'flex-none'
                                 }, [
                                     h('button', {
-                                        class: 'mr-1 bg-red-50',
+                                        class: 'mr-1',
                                         on: {
                                             click(event) {
                                                 _this.deleteLocalHiddenDom(event, hiddenDom, item);
                                             }
                                         }
-                                    }, ['删除']),
+                                    }, [h('img', {
+                                        attrs: {
+                                            src: './imgs/delete-bin-7-line.png',
+                                            style: 'width: 15px;height:15px;'
+                                        }
+                                    })]),
                                     ' ',
                                     h('button', {
                                         on: {
@@ -181,7 +185,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                                 _this.renameLocalHiddenDom(event, hiddenDom, item);
                                             }
                                         }
-                                    }, ['重命名'])
+                                    }, [h('img', {
+                                        attrs: {
+                                            src: './imgs/edit-line.png',
+                                            style: 'width: 15px;height:15px;'
+                                        }
+                                    })])
                                 ]))
                             }
                             return h('div', {
