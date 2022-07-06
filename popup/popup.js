@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         computed: {},
         render: function (h) {
             const _this = this;
+            console.log(_this.items);
             const contentMine = h('div', {
                 class: 'content-mine h-full'
             }, [
@@ -42,13 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         style: 'height: calc(100% - 42px);'
                     }
                 }, _this.items.map(item => {
-                    const isFit = new URL(_this.currentTab.url).host.endsWith(item.host)
                     const itemHeader = [
                         h('div', {
-                            class: 'text-base truncate'
+                            class: 'text-base truncate',
                         }, [item.name])
                     ]
-                    if (isFit) {
+                    if (item.isFitCurrentTab) {
                         itemHeader.push(h('div', {
                             class: 'mx-1 flex-none'
                         }, [h('img', {
@@ -58,28 +58,40 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })]))
                     }
+                    const actions = [
+                        h('button', {
+                            attrs: {
+                                type: 'button'
+                            },
+                            on: {
+                                click() {
+                                    _this.$set(item, 'isShowDetail', !item.isShowDetail)
+                                }
+                            }
+                        }, [item.isShowDetail ? '折叠' : '展开']),
+                    ]
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
-                        itemHeader.push(h('div', {
-                            class: 'flex-auto text-right ml-1'
-                        }, [
-                            h('button', {
-                                on: {
-                                    click(event) {
-                                        _this.deleteLocalItem(event, item);
-                                    }
+                        actions.unshift(h('button', {
+                            class: 'mr-1 bg-red-50',
+                            on: {
+                                click(event) {
+                                    _this.deleteLocalItem(event, item);
                                 }
-                            }, ['删除']),
-                            ' ',
-                            h('button', {
-                                on: {
-                                    click(event) {
-                                        _this.renameLocalItem(event, item);
-                                    }
+                            }
+                        }, ['删除']))
+                        actions.unshift(h('button', {
+                            class: 'mr-1 bg-gray-50',
+                            on: {
+                                click(event) {
+                                    _this.renameLocalItem(event, item);
                                 }
-                            }, ['重命名'])
-                        ]))
+                            }
+                        }, ['重命名']))
                     }
+                    itemHeader.push(h('div', {
+                        class: 'flex-auto text-right ml-1'
+                    }, actions))
                     return h('div', {
                         class: 'item p-2 border-t hover:bg-gray-50'
                     }, [
@@ -100,6 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             ]
                         ),
                         h('div', {
+                            style: {
+                                'display': item.isShowDetail ? 'initial' : 'none'
+                            },
                             attrs: {
                                 class: 'hidden-doms'
                             }
@@ -155,6 +170,9 @@ document.addEventListener('DOMContentLoaded', function () {
                             }, hiddenDomChildren)
                         })),
                         h('div', {
+                            style: {
+                                'display': item.isShowDetail ? 'initial' : 'none'
+                            },
                             attrs: {
                                 class: 'styles'
                             }
@@ -317,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 action: 'loadItems',
             }, function (response) {
                 console.log(response, chrome.runtime.lastError);
-                _this.items = JSON.parse(response)
+                _this.setItems(JSON.parse(response))
             });
         },
         methods: {
@@ -363,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     action: 'reloadItems',
                 }, function (response) {
                     console.log(response, chrome.runtime.lastError);
-                    _this.items = JSON.parse(response)
+                    _this.setItems(JSON.parse(response))
                     _this.refreshItems = false
                 });
             },
@@ -475,6 +493,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         console.log(response);
                     }
                 );
+            },
+            setItems(items) {
+                const currentHost = new URL(this.currentTab.url).host
+                this.items = items.map(item => {
+                    item.isFitCurrentTab = currentHost.endsWith(item.host)
+                    item.isShowDetail = item.isFitCurrentTab
+                    return item
+                })
+                console.log(this.items);
             }
         }
     });
