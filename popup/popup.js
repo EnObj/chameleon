@@ -44,6 +44,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }, _this.items.map(item => {
                     const itemHeader = [
+                        h('button', {
+                            attrs: {
+                                type: 'button'
+                            },
+                            class: 'flex-none',
+                            on: {
+                                click() {
+                                    _this.$set(item, 'isShowDetail', !item.isShowDetail)
+                                }
+                            }
+                        }, [h('img', {
+                            attrs: {
+                                src: `./imgs/${item.isShowDetail ? 'arrow-down-s-fill' : 'arrow-right-s-fill'}.png`,
+                                style: 'width: 15px;height:15px;'
+                            }
+                        })]),
                         h('div', {
                             class: 'text-base truncate',
                         }, [item.name])
@@ -58,40 +74,40 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })]))
                     }
-                    const actions = [
-                        h('button', {
-                            attrs: {
-                                type: 'button'
-                            },
-                            on: {
-                                click() {
-                                    _this.$set(item, 'isShowDetail', !item.isShowDetail)
-                                }
-                            }
-                        }, [item.isShowDetail ? '折叠' : '展开']),
-                    ]
                     // 只有本地的才可以删除和重命名
                     if (item.type == 'local') {
-                        actions.unshift(h('button', {
-                            class: 'mr-1 bg-red-50',
-                            on: {
-                                click(event) {
-                                    _this.deleteLocalItem(event, item);
+                        itemHeader.push(h('div', {
+                            class: 'flex-auto text-right actions',
+                            style: 'min-width: 50px;'
+                        }, [
+                            h('button', {
+                                class: 'mr-1',
+                                on: {
+                                    click(event) {
+                                        _this.deleteLocalItem(event, item);
+                                    }
                                 }
-                            }
-                        }, ['删除']))
-                        actions.unshift(h('button', {
-                            class: 'mr-1 bg-gray-50',
-                            on: {
-                                click(event) {
-                                    _this.renameLocalItem(event, item);
+                            }, [h('img', {
+                                attrs: {
+                                    src: './imgs/delete-bin-7-line.png',
+                                    style: 'width: 15px;height:15px;'
                                 }
-                            }
-                        }, ['重命名']))
+                            })]),
+                            h('button', {
+                                class: 'mr-1',
+                                on: {
+                                    click(event) {
+                                        _this.renameLocalItem(event, item);
+                                    }
+                                }
+                            }, [h('img', {
+                                attrs: {
+                                    src: './imgs/edit-line.png',
+                                    style: 'width: 15px;height:15px;'
+                                }
+                            })])
+                        ]))
                     }
-                    itemHeader.push(h('div', {
-                        class: 'flex-auto text-right ml-1'
-                    }, actions))
                     return h('div', {
                         class: 'item p-2 border-t hover:bg-gray-50'
                     }, [
