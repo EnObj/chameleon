@@ -449,18 +449,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(event, hiddenDom, item);
                 const _this = this
                 const newName = prompt('请输入新名称', hiddenDom.name)
-                // 交给background处理
-                chrome.runtime.sendMessage({
-                    action: 'renameLocalHiddenDom',
-                    data: {
-                        hiddenDom,
-                        item,
-                        newName
-                    }
-                }, function (response) {
-                    console.log('renamed', response);
-                    _this.refresh()
-                });
+                if(newName){
+                    // 交给background处理
+                    chrome.runtime.sendMessage({
+                        action: 'renameLocalHiddenDom',
+                        data: {
+                            hiddenDom,
+                            item,
+                            newName
+                        }
+                    }, function (response) {
+                        console.log('renamed', response);
+                        _this.refresh()
+                    });
+                }
             },
             deleteLocalItem(event, item) {
                 console.log(event, item);
@@ -482,17 +484,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(event, item);
                 const _this = this
                 const newName = prompt('请输入新名称', item.name)
-                // 交给background处理
-                chrome.runtime.sendMessage({
-                    action: 'renameLocalItem',
-                    data: {
-                        item,
-                        newName
-                    }
-                }, function (response) {
-                    console.log('renameed', response);
-                    _this.refresh()
-                });
+                if(newName){
+                    // 交给background处理
+                    chrome.runtime.sendMessage({
+                        action: 'renameLocalItem',
+                        data: {
+                            item,
+                            newName
+                        }
+                    }, function (response) {
+                        console.log('renameed', response);
+                        _this.refresh()
+                    });
+                }
             },
             highLightDom(pageItem, checked) {
                 const _this = this;
