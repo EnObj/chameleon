@@ -106,23 +106,23 @@ function workOnEle($, ele, list, seletor, ref) {
                     selector: childSeletor,
                     insideId: parent.insideId + '-ea' + index
                 }
-                const startDivIndex = list.length
+                // const startDivIndex = list.length
                 list.push(startDiv)
                 workOnEle($, child, list, childSeletor, ref)
-                // 如果没有递归到子元素，移除开始递归标签
-                if (list[list.length - 1] == startDiv) {
-                    list.splice(list.length - 1, 1)
-                } else if (list[startDivIndex + 1] == list[list.length - 1] || list[startDivIndex + 1].type == 'div' && list[startDivIndex + 1].selector == list[list.length - 1].selector) {
-                    // 子元素就一个，还是个开始递归标签，那么移除此开始递归标签
-                    list.splice(startDivIndex, 1)
-                } else {
-                    // 结束递归标签
-                    list.push({
-                        type: '/div',
-                        selector: childSeletor,
-                        insideId: parent.insideId + '-eb' + index
-                    })
-                }
+                // // 如果没有递归到子元素，移除开始递归标签
+                // if (list[list.length - 1] == startDiv) {
+                //     list.splice(list.length - 1, 1)
+                // } else if (list[startDivIndex + 1] == list[list.length - 1] || list[startDivIndex + 1].type == 'div' && list[startDivIndex + 1].selector == list[list.length - 1].selector) {
+                //     // 子元素就一个，还是个开始递归标签，那么移除此开始递归标签
+                //     list.splice(startDivIndex, 1)
+                // } else {
+                // }
+                // 结束递归标签
+                list.push({
+                    type: '/div',
+                    selector: childSeletor,
+                    insideId: parent.insideId + '-eb' + index
+                })
                 break;
             case 3:
                 const text = child.data.trim()
