@@ -543,11 +543,17 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             setItems(items) {
                 const currentHost = new URL(this.currentTab.url).host
-                this.items = items.map(item => {
+                const sortitems = items.map(item => {
                     item.isFitCurrentTab = currentHost.endsWith(item.host)
                     item.isShowDetail = item.isFitCurrentTab
                     return item
                 })
+
+                sortitems.sort(function (a, b) {
+                    return a.isFitCurrentTab && !b.isFitCurrentTab ? -1 : 0
+                })
+
+                this.items = sortitems;
                 console.log(this.items);
             }
         }
