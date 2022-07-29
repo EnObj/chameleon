@@ -44,6 +44,38 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }, _this.items.map(item => {
                     const itemHeader = [
+                        h('input', {
+                            attrs: {
+                                class: 'item-checkbox mr-1',
+                                type: 'checkbox',
+                                id: item._id
+                            },
+                            domProps: {
+                                checked: item.hiddenDoms.every(hiddenDom => hiddenDom.checked) && item.styles.every(style => style.checked),
+                            },
+                            on: {
+                                change(event) {
+                                    const checked = !!event.target.checked;
+                                    for (const hiddenDom of item.hiddenDoms) {
+                                        if (hiddenDom.checked != checked) {
+                                            hiddenDom.checked = checked
+                                            _this.switchHiddenDom(event, hiddenDom, item)
+                                        }
+                                    }
+                                    for (const style of item.styles) {
+                                        if (style.checked != checked) {
+                                            style.checked = checked
+                                            _this.switchStyle(event, style, item)
+                                        }
+                                    }
+                                }
+                            }
+                        }, []),
+                        h('label', {
+                            attrs: {
+                                for: item._id
+                            }
+                        }, [item.name]),
                         h('button', {
                             attrs: {
                                 type: 'button'
@@ -60,9 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 style: 'width: 15px;height:15px;'
                             }
                         })]),
-                        h('div', {
-                            class: 'text-base truncate',
-                        }, [item.name])
                     ]
                     if (item.isFitCurrentTab) {
                         itemHeader.push(h('div', {
@@ -70,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }, [h('img', {
                             attrs: {
                                 src: "./imgs/logo.png",
-                                style: 'width: 20px;height:20px;'
+                                style: 'width: 15px;height:15px;'
                             }
                         })]))
                     }
@@ -142,8 +171,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                         attrs: {
                                             class: 'hidden-dom-checkbox mr-1',
                                             type: 'checkbox',
-                                            checked: hiddenDom.checked,
                                             id: item._id + hiddenDom.name
+                                        },
+                                        domProps: {
+                                            checked: hiddenDom.checked,
                                         },
                                         on: {
                                             change(event) {
@@ -215,8 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                 attrs: {
                                     class: 'style-checkbox mr-1',
                                     type: 'checkbox',
-                                    checked: style.checked,
                                     id: item._id + style.name
+                                },
+                                domProps: {
+                                    checked: style.checked,
                                 },
                                 on: {
                                     change(event) {
