@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: '',
                 id: 0
             },
-            clipPageItems: []
+            clipPageItems: [],
+            readItemIndex: 0, // 正在阅读的段落
         },
         computed: {},
         render: function (h) {
@@ -350,6 +351,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     }))
                 ])
             ]);
+            const contentRead = h('div', {
+                class: 'read'
+            }, [
+                h('div', {
+                    class: 'm-4 text-center'
+                }, [
+                    _this.readItemIndex,
+                ]),
+                h('div', {
+                    class: 'text-center'
+                }, [
+                    h('button', {
+                        attrs: {
+                            class: 'bg-gray-200 px-2 py-1'
+                        },
+                        on: {
+                            click: _this.nextPageItem
+                        }
+                    }, ['下一个']),
+                    h('button', {
+                        attrs: {
+                            class: 'ml-2 bg-gray-200 px-2 py-1'
+                        },
+                        on: {
+                            click: _this.prePageItem
+                        }
+                    }, ['上一个'])
+                ])
+            ])
+
+            const tabs = {
+                'mine': contentMine,
+                'create': contentCreate,
+                'read': contentRead
+            }
 
             return h(
                 'div', {
@@ -380,11 +416,22 @@ document.addEventListener('DOMContentLoaded', function () {
                                     _this.currentNav = 'create'
                                 }
                             }
-                        }, ['DIY'])
+                        }, ['DIY']),
+                        h('div', {
+                            class: {
+                                "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
+                                "bg-green-50": _this.currentNav == 'read'
+                            },
+                            on: {
+                                click() {
+                                    _this.currentNav = 'read'
+                                }
+                            }
+                        }, ['短书'])
                     ]),
                     h('div', {
                         class: 'flex-auto h-full overflow-hidden'
-                    }, [_this.currentNav == 'mine' ? contentMine : contentCreate])
+                    }, [tabs[_this.currentNav]])
                 ]
             )
         },
@@ -393,6 +440,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (val == 'mine') {
                     this.refresh()
                 } else if (val == 'create') {
+                    this.loadDom()
+                } else if (val == 'read') {
                     this.loadDom()
                 }
             }
@@ -588,6 +637,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 this.items = sortitems;
                 console.log(this.items);
+            },
+            nextPageItem() {
+                this.oneByOnePageItem()
+            },
+            prePageItem() {
+                this.oneByOnePageItem(true)
+            },
+            oneByOnePageItem(back) {
+                this.readItemIndex += back ? -1 : 1
+                const pageItem = this.page.list[this.readItemIndex];
+                if (pageItem) {
+                    if (!pageItem.content) {
+                        this.oneByOnePageItem(back);
+                    } else {
+                        const _this = this;
+                        chrome.tabs.sendMessage(
+                            _this.currentTab.id, {
+                                action: 'readPageItem',
+                                content: pageItem.content,
+                            },
+                            function (response) {
+                                // window.close();
+                                console.log(response);
+                            }
+                        );
+                    }
+                }
+
             }
         }
     });

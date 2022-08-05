@@ -15,6 +15,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             url: location.href
         });
     }
+    if (request.action == 'readPageItem') {
+        $('body').html(`
+            <div style="position:absolute;top:0;bottom:0;left:0;right:0;display:flex;">
+                <div style="max-width:500px;margin:auto;">${request.content}</div>
+            </div>`)
+    }
     if (request.hiddenDom) {
         handleHiddenDom(request.hiddenDom, request.host)
     }
