@@ -16,10 +16,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
     if (request.action == 'readPageItem') {
-        $('body').html(`
-            <div style="position:absolute;top:0;bottom:0;left:0;right:0;display:flex;">
-                <div style="max-width:500px;margin:auto;">${request.content}</div>
-            </div>`)
+        chameleonReader.init()
     }
     if (request.hiddenDom) {
         handleHiddenDom(request.hiddenDom, request.host)
@@ -145,3 +142,57 @@ function workOnEle($, ele, list, seletor, ref) {
         }
     })
 };
+
+var chameleonReader = {
+    page: null,
+    init() {
+        const list = [{
+            type: 'div',
+            selector: 'body',
+            insideId: 'e0'
+        }]
+        workOnEle($, $("body"), list, "body");
+        this.page = {
+            list: list,
+            title: $("title").text().trim(),
+            url: location.href
+        }
+        $('body').append(`
+            <div style="position:absolute;top:0;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgb(255, 255, 255, 0.9);" class="duanshu">
+                <div style="flex:auto;display:flex;">
+                    <div style="max-width:500px;margin:auto;">
+                        <div class="duanshu-item">准备完毕</div>
+                    </div>
+                </div>
+                <div style="flex:none;margin:20px 0;text-align:center;">
+                    <button class="btn-pre">Pre</button>
+                    <button class="btn-next">Next</button>
+                    <button class="btn-exit">Exit</button>
+                </div>
+            </div>`)
+        $('.btn-next').click(this.nextPageItem.bind(this))
+        $('.btn-pre').click(this.prePageItem.bind(this))
+        $('.btn-exit').click(function () {
+            $('.duanshu').remove()
+        })
+    },
+    readItemIndex: 0,
+    nextPageItem() {
+        this.oneByOnePageItem()
+    },
+    prePageItem() {
+        this.oneByOnePageItem(true)
+    },
+    oneByOnePageItem(back) {
+        this.readItemIndex += back ? -1 : 1
+        const pageItem = this.page.list[this.readItemIndex];
+        if (pageItem) {
+            if (!pageItem.content) {
+                this.oneByOnePageItem(back);
+            } else {
+                $('.duanshu-item').text(pageItem.content);
+            }
+        }
+
+    }
+}

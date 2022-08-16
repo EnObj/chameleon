@@ -355,29 +355,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 class: 'read'
             }, [
                 h('div', {
-                    class: 'm-4 text-center'
-                }, [
-                    _this.readItemIndex,
-                ]),
-                h('div', {
-                    class: 'text-center'
+                    class: 'text-center my-20'
                 }, [
                     h('button', {
                         attrs: {
                             class: 'bg-gray-200 px-2 py-1'
                         },
                         on: {
-                            click: _this.nextPageItem
+                            click: _this.startRead
                         }
-                    }, ['下一个']),
-                    h('button', {
-                        attrs: {
-                            class: 'ml-2 bg-gray-200 px-2 py-1'
-                        },
-                        on: {
-                            click: _this.prePageItem
-                        }
-                    }, ['上一个'])
+                    }, ['开始'])
                 ])
             ])
 
@@ -638,33 +625,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.items = sortitems;
                 console.log(this.items);
             },
-            nextPageItem() {
-                this.oneByOnePageItem()
-            },
-            prePageItem() {
-                this.oneByOnePageItem(true)
-            },
-            oneByOnePageItem(back) {
-                this.readItemIndex += back ? -1 : 1
-                const pageItem = this.page.list[this.readItemIndex];
-                if (pageItem) {
-                    if (!pageItem.content) {
-                        this.oneByOnePageItem(back);
-                    } else {
-                        const _this = this;
-                        chrome.tabs.sendMessage(
-                            _this.currentTab.id, {
-                                action: 'readPageItem',
-                                content: pageItem.content,
-                            },
-                            function (response) {
-                                // window.close();
-                                console.log(response);
-                            }
-                        );
+            startRead() {
+                const _this = this;
+                chrome.tabs.sendMessage(
+                    _this.currentTab.id, {
+                        action: 'readPageItem',
+                    },
+                    function (response) {
+                        // window.close();
+                        console.log(response);
                     }
-                }
-
+                );
             }
         }
     });
