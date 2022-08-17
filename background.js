@@ -142,6 +142,11 @@ chrome.runtime.onMessage.addListener(
                 newName,
             } = request.data
             renameLocalItem(item, newName).then(sendResponse)
+        } else if (request.action == 'publishLocalItem') {
+            const {
+                item
+            } = request.data
+            publishLocalItem(item).then(sendResponse)
         }
     }
 );
@@ -323,5 +328,23 @@ function renameLocalHiddenDom(hiddenDom, localItem, newName) {
             }, resolve)
 
         })
+    })
+}
+
+function publishLocalItem(item) {
+    return fetch('https://service-o4amteg7-1252108641.sh.apigw.tencentcs.com/release/tcb-dba', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            action: 'add-chameleon',
+            data: {
+                item
+            }
+        })
+    }).then(res => res.json()).then(data => {
+        console.log(data);
+        return 'publishLocalItem success'
     })
 }

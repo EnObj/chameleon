@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (item.type == 'local') {
                         itemHeader.push(h('div', {
                             class: 'flex-auto text-right actions',
-                            style: 'min-width: 50px;'
+                            style: 'min-width: 60px;'
                         }, [
                             h('button', {
                                 class: 'mr-1',
@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 }
                             })]),
                             h('button', {
+                                class: 'mr-1',
                                 on: {
                                     click(event) {
                                         _this.renameLocalItem(event, item);
@@ -132,6 +133,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             }, [h('img', {
                                 attrs: {
                                     src: './imgs/edit-line.png',
+                                    style: 'width: 15px;height:15px;'
+                                }
+                            })]),
+                            h('button', {
+                                on: {
+                                    click(event) {
+                                        _this.publishLocalItem(event, item);
+                                    }
+                                }
+                            }, [h('img', {
+                                attrs: {
+                                    src: './imgs/upload-cloud-line.png',
                                     style: 'width: 15px;height:15px;'
                                 }
                             })])
@@ -532,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }, function (response) {
                         console.log('deleted', response);
-                        _this.refresh()
+                        item.hiddenDoms.splice(item.hiddenDoms.indexOf(hiddenDom), 1) // 更新本地
                     });
                 }
             },
@@ -551,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }, function (response) {
                         console.log('renamed', response);
-                        _this.refresh()
+                        hiddenDom.name = newName;
                     });
                 }
             },
@@ -567,7 +580,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }, function (response) {
                         console.log('deleted', response);
-                        _this.refresh()
+                        // 本地清除
+                        _this.items.splice(_this.items.indexOf(item), 1)
                     });
                 }
             },
@@ -585,7 +599,23 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }, function (response) {
                         console.log('renameed', response);
-                        _this.refresh()
+                        item.name = newName; // 更新新名称
+                    });
+                }
+            },
+            publishLocalItem(event, item) {
+                console.log(event, item);
+                const ans = confirm('上线申请审核通过后自动上线展示，是否确认提交申请？')
+                if (ans) {
+                    // 交给background处理
+                    chrome.runtime.sendMessage({
+                        action: 'publishLocalItem',
+                        data: {
+                            item
+                        }
+                    }, function (response) {
+                        console.log('published', response);
+                        alert('已提交。')
                     });
                 }
             },
