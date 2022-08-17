@@ -158,16 +158,24 @@ var chameleonReader = {
             url: location.href
         }
         $('body').append(`
-            <div style="position:absolute;top:0;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgb(255, 255, 255, 0.9);" class="duanshu">
-                <div style="flex:auto;display:flex;">
-                    <div style="max-width:500px;margin:auto;">
+            <div style="z-index:10000;position:fixed;top:0;bottom:0;left:0;right:0;display:flex;flex-direction:column;background:rgb(255, 255, 255, 0.9);" class="duanshu">
+                <div style="flex:auto;display:flex;overflow:auto;">
+                    <div style="max-width:500px;margin:auto;" class="duanshu-items">
                         <div class="duanshu-item">准备完毕</div>
                     </div>
                 </div>
-                <div style="flex:none;margin:20px 0;text-align:center;">
+                <div style="flex:none;margin:10px 0;text-align:center;">
                     <button class="btn-pre">Pre</button>
                     <button class="btn-next">Next</button>
+                </div>
+                <div style="flex:none;margin:0 0 10px 0;text-align:center;">
                     <button class="btn-exit">Exit</button>
+                    <select class="select-step">
+                        <option value="1">一步一个脚印</option>
+                        <option value="2">事半功倍</option>
+                        <option value="5">五彩缤纷</option>
+                        <option value="10">一目十行</option>
+                    </select>
                 </div>
             </div>`)
         $('.btn-next').click(this.nextPageItem.bind(this))
@@ -175,24 +183,35 @@ var chameleonReader = {
         $('.btn-exit').click(function () {
             $('.duanshu').remove()
         })
+        const _this = this;
+        $('.select-step').change(function (event) {
+            _this.bucketSize = +event.target.value
+            _this.nextPageItem()
+        })
     },
     readItemIndex: 0,
+    bucketSize: 1,
     nextPageItem() {
         this.oneByOnePageItem()
     },
     prePageItem() {
         this.oneByOnePageItem(true)
     },
-    oneByOnePageItem(back) {
+    oneByOnePageItem(back, bucket = []) {
         this.readItemIndex += back ? -1 : 1
         const pageItem = this.page.list[this.readItemIndex];
         if (pageItem) {
             if (!pageItem.content) {
-                this.oneByOnePageItem(back);
+                this.oneByOnePageItem(back, bucket);
             } else {
-                $('.duanshu-item').text(pageItem.content);
+                // 桶满了就继续
+                bucket.push(`<div class="duanshu-item" style="margin:10px 0;">${pageItem.content}</div>`)
+                if (bucket.length == this.bucketSize) {
+                    $('.duanshu-items').html(bucket.join(''));
+                } else {
+                    this.oneByOnePageItem(back, bucket)
+                }
             }
         }
-
     }
 }
