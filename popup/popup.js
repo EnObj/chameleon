@@ -628,6 +628,42 @@ document.addEventListener("DOMContentLoaded", function () {
           class: "share",
         },
         [
+          // 复制or下载
+          h(
+            "div",
+            {
+              class: "ctrl m-2",
+            },
+            [
+              h(
+                "button",
+                {
+                  class: "bg-gray-200 hover:bg-gray-100 px-2 py-1 mr-2",
+                  on: {
+                    click: _this.handleCopyShareCardImg,
+                  },
+                },
+                ["复制"]
+              ),
+              h(
+                "button",
+                {
+                  class: "bg-gray-200 hover:bg-gray-100 px-2 py-1 mr-2",
+                  on: {
+                    click: _this.handleDownloadShareCardImg,
+                  },
+                },
+                ["下载"]
+              ),
+              h(
+                "span",
+                {
+                  class: "text-gray-500",
+                },
+                ["或右键复制/保存卡片。"]
+              ),
+            ]
+          ),
           // 生成前的预览
           h(
             "div",
@@ -1202,6 +1238,24 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(response);
           }
         );
+      },
+      handleCopyShareCardImg() {
+        const selection = window.getSelection(); // 清除选中
+        if (selection.rangeCount > 0) selection.removeAllRanges(); // https://developer.mozilla.org/zh-CN/docs/Web/API/Document/queryCommandSupported
+        if (!document.queryCommandSupported("copy"))
+          return alert("浏览器暂不支持复制命令"); // 创建range区域
+        const range = document.createRange();
+        range.selectNode(this.$refs.shareCardImg);
+        selection.addRange(range);
+        document.execCommand("copy");
+        selection.removeAllRanges();
+      },
+      handleDownloadShareCardImg() {
+        let a = document.createElement("a");
+        let event = new MouseEvent("click");
+        a.download = "share.png";
+        a.href = this.$refs.shareCardImg.src;
+        a.dispatchEvent(event);
       },
     },
   });
