@@ -33,7 +33,13 @@ document.addEventListener("DOMContentLoaded", function () {
         ],
       },
     },
-    computed: {},
+    computed: {
+      shareCardContent() {
+        return {
+          items: this.page.list.filter((item) => item.shareCardContentChecked),
+        };
+      },
+    },
     render: function (h) {
       const _this = this;
       console.log(_this.items);
@@ -640,6 +646,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 [_this.page.title]
               ),
+              ..._this.shareCardContent.items.map((item) =>
+                h(
+                  "div",
+                  {
+                    class: "py-1",
+                  },
+                  [item.content]
+                )
+              ),
               h(
                 "div",
                 {
@@ -726,6 +741,49 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
               ),
             ]
+          ),
+          // 选择段落
+          h(
+            "div",
+            {
+              class: "m-2 overflow-auto",
+            },
+            _this.page.list
+              .filter((item) => item.type == "text")
+              .map((item) => {
+                return h("div", {}, [
+                  h(
+                    "input",
+                    {
+                      attrs: {
+                        class: "hidden-dom-checkbox mr-1",
+                        type: "checkbox",
+                        checked: false,
+                        id: item.insideId,
+                      },
+                      on: {
+                        change(event) {
+                          _this.$set(
+                            item,
+                            "shareCardContentChecked",
+                            !!event.target.checked
+                          );
+                        },
+                      },
+                    },
+                    []
+                  ),
+                  h(
+                    "label",
+                    {
+                      attrs: {
+                        for: item.insideId,
+                      },
+                    },
+                    [item.content]
+                  ),
+                ]);
+              })
           ),
           // 确认按钮
           // h(
@@ -833,7 +891,7 @@ document.addEventListener("DOMContentLoaded", function () {
           h(
             "div",
             {
-              class: "flex-auto h-full overflow-hidden",
+              class: "flex-auto h-full overflow-auto",
             },
             [tabs[_this.currentNav]]
           ),
@@ -865,6 +923,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
       shardCardStyle: {
+        deep: true,
+        handler: "shareByCard",
+      },
+      shareCardContent: {
         deep: true,
         handler: "shareByCard",
       },
