@@ -464,7 +464,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const contentCreate = h(
         "div",
         {
-          class: "content-create h-full overflow-auto p-2",
+          class: "content-create p-2",
         },
         [
           h(
@@ -473,7 +473,13 @@ document.addEventListener("DOMContentLoaded", function () {
               class: "page",
             },
             [
-              _this.page.title,
+              h(
+                "div",
+                {
+                  class: "my-2 text-lg",
+                },
+                [_this.page.title]
+              ),
               h(
                 "div",
                 {
@@ -755,6 +761,13 @@ document.addEventListener("DOMContentLoaded", function () {
               h(
                 "div",
                 {
+                  class: "border-gray-400 border-l-2 my-2 pl-1",
+                },
+                ["选择样式"]
+              ),
+              h(
+                "div",
+                {
                   class: "card-style-bg flex justify-between",
                 },
                 _this.shardCardStyleOptions.bg.map((bg) => {
@@ -782,44 +795,57 @@ document.addEventListener("DOMContentLoaded", function () {
           h(
             "div",
             {
-              class: "m-2 overflow-auto",
+              class: "m-2",
             },
-            _this.page.list
-              .filter((item) => item.type == "text")
-              .map((item) => {
-                return h("div", {}, [
-                  h(
-                    "input",
-                    {
-                      attrs: {
-                        class: "hidden-dom-checkbox mr-1",
-                        type: "checkbox",
-                        checked: false,
-                        id: item.insideId,
-                      },
-                      on: {
-                        change(event) {
-                          _this.$set(
-                            item,
-                            "shareCardContentChecked",
-                            !!event.target.checked
-                          );
+            [
+              h(
+                "div",
+                {
+                  class: "border-gray-400 border-l-2 my-2 pl-1",
+                },
+                ["选择内容"]
+              ),
+              h(
+                "div",
+                {},
+                _this.page.list
+                  .filter((item) => item.type == "text")
+                  .map((item) => {
+                    return h("div", {}, [
+                      h(
+                        "input",
+                        {
+                          attrs: {
+                            class: "hidden-dom-checkbox mr-1",
+                            type: "checkbox",
+                            checked: false,
+                            id: item.insideId,
+                          },
+                          on: {
+                            change(event) {
+                              _this.$set(
+                                item,
+                                "shareCardContentChecked",
+                                !!event.target.checked
+                              );
+                            },
+                          },
                         },
-                      },
-                    },
-                    []
-                  ),
-                  h(
-                    "label",
-                    {
-                      attrs: {
-                        for: item.insideId,
-                      },
-                    },
-                    [item.content]
-                  ),
-                ]);
-              })
+                        []
+                      ),
+                      h(
+                        "label",
+                        {
+                          attrs: {
+                            for: item.insideId,
+                          },
+                        },
+                        [item.content]
+                      ),
+                    ]);
+                  })
+              ),
+            ]
           ),
           // 确认按钮
           // h(
