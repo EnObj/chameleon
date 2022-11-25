@@ -897,6 +897,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!this.page.url) {
           return alert("请重试");
         }
+        this.$refs.shareCardImg.src = "";
         // 生成二维码
         const url = await QRCode.toDataURL(this.page.url, {
           color: { light: "#ffffff00" },
