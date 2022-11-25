@@ -15,11 +15,29 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       clipPageItems: [],
       readItemIndex: 0, // 正在阅读的段落
+      shardCardStyle: {
+        bg: "#90ee90", // 背景
+      },
+      // 预置选项
+      shardCardStyleOptions: {
+        bg: [
+          "#ff4500",
+          "#ff8c00",
+          "#ffd700",
+          "#90ee90",
+          "#00ced1",
+          "#1e90ff",
+          "rgba(255, 69, 0, 0.68)",
+          "rgb(255, 120, 0)",
+          "#c7158577",
+        ],
+      },
     },
     computed: {},
     render: function (h) {
-      const _this = this
-      console.log(_this.items)
+      const _this = this;
+      console.log(_this.items);
+      // 变色龙模块
       const contentMine = h(
         "div",
         {
@@ -79,17 +97,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     },
                     on: {
                       change(event) {
-                        const checked = !!event.target.checked
+                        const checked = !!event.target.checked;
                         for (const hiddenDom of item.hiddenDoms) {
                           if (hiddenDom.checked != checked) {
-                            hiddenDom.checked = checked
-                            _this.switchHiddenDom(event, hiddenDom, item)
+                            hiddenDom.checked = checked;
+                            _this.switchHiddenDom(event, hiddenDom, item);
                           }
                         }
                         for (const style of item.styles) {
                           if (style.checked != checked) {
-                            style.checked = checked
-                            _this.switchStyle(event, style, item)
+                            style.checked = checked;
+                            _this.switchStyle(event, style, item);
                           }
                         }
                       },
@@ -115,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     class: "flex-none",
                     on: {
                       click() {
-                        _this.$set(item, "isShowDetail", !item.isShowDetail)
+                        _this.$set(item, "isShowDetail", !item.isShowDetail);
                       },
                     },
                   },
@@ -132,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }),
                   ]
                 ),
-              ]
+              ];
               if (item.isFitCurrentTab) {
                 itemHeader.push(
                   h(
@@ -149,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       }),
                     ]
                   )
-                )
+                );
               }
               // 只有本地的才可以删除和重命名
               if (item.type == "local") {
@@ -167,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           class: "mr-1",
                           on: {
                             click(event) {
-                              _this.deleteLocalItem(event, item)
+                              _this.deleteLocalItem(event, item);
                             },
                           },
                         },
@@ -186,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           class: "mr-1",
                           on: {
                             click(event) {
-                              _this.renameLocalItem(event, item)
+                              _this.renameLocalItem(event, item);
                             },
                           },
                         },
@@ -204,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         {
                           on: {
                             click(event) {
-                              _this.publishLocalItem(event, item)
+                              _this.publishLocalItem(event, item);
                             },
                           },
                         },
@@ -219,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       ),
                     ]
                   )
-                )
+                );
               }
               return h(
                 "div",
@@ -284,12 +302,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                 },
                                 on: {
                                   change(event) {
-                                    hiddenDom.checked = !!event.target.checked
+                                    hiddenDom.checked = !!event.target.checked;
                                     _this.switchHiddenDom(
                                       event,
                                       hiddenDom,
                                       item
-                                    )
+                                    );
                                   },
                                 },
                               },
@@ -306,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             ),
                           ]
                         ),
-                      ]
+                      ];
                       // 只有本地的才可以删除和重命名
                       if (item.type == "local") {
                         hiddenDomChildren.push(
@@ -326,7 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         event,
                                         hiddenDom,
                                         item
-                                      )
+                                      );
                                     },
                                   },
                                 },
@@ -349,7 +367,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         event,
                                         hiddenDom,
                                         item
-                                      )
+                                      );
                                     },
                                   },
                                 },
@@ -364,7 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {
                               ),
                             ]
                           )
-                        )
+                        );
                       }
                       return h(
                         "div",
@@ -375,7 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           },
                         },
                         hiddenDomChildren
-                      )
+                      );
                     })
                   ),
                   h(
@@ -410,8 +428,8 @@ document.addEventListener("DOMContentLoaded", function () {
                               },
                               on: {
                                 change(event) {
-                                  style.checked = !!event.target.checked
-                                  _this.switchStyle(event, style, item)
+                                  style.checked = !!event.target.checked;
+                                  _this.switchStyle(event, style, item);
                                 },
                               },
                             },
@@ -427,15 +445,16 @@ document.addEventListener("DOMContentLoaded", function () {
                             [style.name]
                           ),
                         ]
-                      )
+                      );
                     })
                   ),
                 ]
-              )
+              );
             })
           ),
         ]
-      )
+      );
+      // diy模块
       const contentCreate = h(
         "div",
         {
@@ -458,15 +477,15 @@ document.addEventListener("DOMContentLoaded", function () {
                   .filter((item) => {
                     // 关闭标签不显示
                     if (item.type == "/div") {
-                      return false
+                      return false;
                     }
                     // 手动隐藏的容器子元素不显示
                     return _this.clipPageItems.every((clipPageItem) => {
                       return (
                         clipPageItem == item.insideId ||
                         !item.insideId.startsWith(clipPageItem)
-                      )
-                    })
+                      );
+                    });
                   })
                   .map((item) => {
                     const pageItem = [
@@ -494,7 +513,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                   name: _this.page.title,
                                   type: "local",
                                 }
-                              )
+                              );
                             },
                           },
                         },
@@ -509,7 +528,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         },
                         [item.content]
                       ),
-                    ]
+                    ];
                     if (item.type == "div") {
                       pageItem.unshift(
                         h("img", {
@@ -528,20 +547,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                 _this.clipPageItems.splice(
                                   _this.clipPageItems.indexOf(item.insideId),
                                   1
-                                )
+                                );
                               } else {
-                                _this.clipPageItems.push(item.insideId)
+                                _this.clipPageItems.push(item.insideId);
                               }
                             },
                           },
                         })
-                      )
+                      );
                     } else {
                       pageItem.unshift(
                         h("div", {
                           style: "width: 15px;height:15px;",
                         })
-                      )
+                      );
                     }
                     return h(
                       "div",
@@ -550,23 +569,24 @@ document.addEventListener("DOMContentLoaded", function () {
                         style: `padding-left: ${item.depth * 10}px;`,
                         on: {
                           mouseenter(event) {
-                            console.log("mouseenter", event, item)
-                            _this.highLightDom(item, true)
+                            console.log("mouseenter", event, item);
+                            _this.highLightDom(item, true);
                           },
                           mouseleave(event) {
-                            console.log("mouseleave", event, item)
-                            _this.highLightDom(item, false)
+                            console.log("mouseleave", event, item);
+                            _this.highLightDom(item, false);
                           },
                         },
                       },
                       pageItem
-                    )
+                    );
                   })
               ),
             ]
           ),
         ]
-      )
+      );
+      // 短书模块
       const contentRead = h(
         "div",
         {
@@ -594,20 +614,21 @@ document.addEventListener("DOMContentLoaded", function () {
             ]
           ),
         ]
-      )
-      // 分享二维码卡片
+      );
+      // 分享二维码卡片模块
       const contentShare = h(
         "div",
         {
           class: "share",
         },
         [
+          // 生成前的预览
           h(
             "div",
             {
               class: "share-card-demo m-2 p-2 hidden",
               style: {
-                backgroundColor: "#90ee90",
+                backgroundColor: _this.shardCardStyle.bg,
               },
               ref: "shareCardDemo",
             },
@@ -656,6 +677,7 @@ document.addEventListener("DOMContentLoaded", function () {
               ),
             ]
           ),
+          // 生成的卡片
           h(
             "div",
             {
@@ -672,33 +694,67 @@ document.addEventListener("DOMContentLoaded", function () {
               ),
             ]
           ),
+          // 选择样式
           h(
             "div",
             {
-              class: "ctrl text-center mt-2",
+              class: "card-style m-2",
             },
             [
               h(
-                "button",
+                "div",
                 {
-                  class: "bg-gray-200 px-2 py-1",
-                  on: {
-                    click: _this.shareByCard,
-                  },
+                  class: "card-style-bg flex justify-between",
                 },
-                ["生成分享卡片"]
+                _this.shardCardStyleOptions.bg.map((bg) => {
+                  return h(
+                    "div",
+                    {
+                      class: "card-style-bg-gray w-4 h-4 cursor-pointer",
+                      style: {
+                        backgroundColor: bg,
+                      },
+                      on: {
+                        // 切换背景色
+                        click() {
+                          _this.shardCardStyle.bg = bg;
+                        },
+                      },
+                    },
+                    []
+                  );
+                })
               ),
             ]
           ),
+          // 确认按钮
+          // h(
+          //   "div",
+          //   {
+          //     class: "ctrl text-center mt-2",
+          //   },
+          //   [
+          //     h(
+          //       "button",
+          //       {
+          //         class: "bg-gray-200 hover:bg-gray-100 px-2 py-1",
+          //         on: {
+          //           click: _this.shareByCard,
+          //         },
+          //       },
+          //       ["刷新"]
+          //     ),
+          //   ]
+          // ),
         ]
-      )
+      );
 
       const tabs = {
         mine: contentMine,
         create: contentCreate,
         read: contentRead,
         share: contentShare,
-      }
+      };
 
       return h(
         "div",
@@ -721,7 +777,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   },
                   on: {
                     click() {
-                      _this.currentNav = "mine"
+                      _this.currentNav = "mine";
                     },
                   },
                 },
@@ -736,7 +792,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   },
                   on: {
                     click() {
-                      _this.currentNav = "create"
+                      _this.currentNav = "create";
                     },
                   },
                 },
@@ -751,7 +807,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   },
                   on: {
                     click() {
-                      _this.currentNav = "read"
+                      _this.currentNav = "read";
                     },
                   },
                 },
@@ -766,7 +822,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   },
                   on: {
                     click() {
-                      _this.currentNav = "share"
+                      _this.currentNav = "share";
                     },
                   },
                 },
@@ -782,123 +838,132 @@ document.addEventListener("DOMContentLoaded", function () {
             [tabs[_this.currentNav]]
           ),
         ]
-      )
+      );
     },
     watch: {
       currentNav(val) {
         if (val == "mine") {
-          this.refresh()
+          this.refresh();
         } else if (val == "create") {
-          this.loadDom()
+          this.loadDom().then(() => {
+            // 创建本地变色龙
+            chrome.runtime.sendMessage({
+              action: "createLocalItem",
+              localItem: {
+                id: this.page.url,
+                host: new URL(_this.page.url).host,
+                name: this.page.title,
+              },
+            });
+          });
         } else if (val == "read") {
-          this.loadDom()
+          this.loadDom();
         } else if (val == "share") {
-          this.loadDom()
+          this.loadDom().then(() => {
+            this.shareByCard();
+          });
         }
+      },
+      shardCardStyle: {
+        deep: true,
+        handler: "shareByCard",
       },
     },
     created() {
       // 加载用户设置
-      const _this = this
+      const _this = this;
       chrome.tabs.query(
         {
           active: true,
           currentWindow: true,
         },
         function (tabs) {
-          _this.currentTab.url = tabs[0].url
-          _this.currentTab.id = tabs[0].id
+          _this.currentTab.url = tabs[0].url;
+          _this.currentTab.id = tabs[0].id;
         }
-      )
+      );
       chrome.runtime.sendMessage(
         {
           action: "loadItems",
         },
         function (response) {
-          console.log(response, chrome.runtime.lastError)
-          _this.setItems(JSON.parse(response))
+          console.log(response, chrome.runtime.lastError);
+          _this.setItems(JSON.parse(response));
         }
-      )
+      );
     },
     methods: {
       async shareByCard() {
         if (!this.page.url) {
-          return alert("请重试")
+          return alert("请重试");
         }
         // 生成二维码
         const url = await QRCode.toDataURL(this.page.url, {
           color: { light: "#ffffff00" },
-        })
-        console.log(url)
-        this.$refs.qrcode.src = url
+        });
+        console.log(url);
+        this.$refs.qrcode.src = url;
 
         // 导出卡片
-        this.$refs.shareCardDemo.style.display = "block"
+        this.$refs.shareCardDemo.style.display = "block";
         const canvas = (this.shareCardCanvas = await html2canvas(
           this.$refs.shareCardDemo,
           {}
-        ))
+        ));
         // 插入到文档里面
-        this.$refs.shareCardDemo.style.display = "none"
-        this.$refs.shareCardImg.src = canvas.toDataURL("image/png")
-
-        this.showShareCard = true
+        this.$refs.shareCardDemo.style.display = "none";
+        this.$refs.shareCardImg.src = canvas.toDataURL("image/png");
       },
       loadDom() {
-        const _this = this
-        chrome.tabs.query(
-          {
-            active: true,
-            currentWindow: true,
-          },
-          function (tabs) {
-            chrome.tabs.sendMessage(
-              tabs[0].id,
-              {
-                action: "loadDocument",
-              },
-              function (response) {
-                console.log(response)
-                let depth = 0
-                response.list.forEach((item, index) => {
-                  item.depth = depth
-                  if (item.type == "div") {
-                    depth++
-                  } else if (item.type == "/div") {
-                    depth--
-                  }
-                })
-                _this.page = response
-                chrome.runtime.sendMessage({
-                  action: "createLocalItem",
-                  localItem: {
-                    id: _this.page.url,
-                    host: new URL(_this.page.url).host,
-                    name: _this.page.title,
-                  },
-                })
-              }
-            )
-          }
-        )
+        const _this = this;
+        return new Promise((resolve, reject) => {
+          chrome.tabs.query(
+            {
+              active: true,
+              currentWindow: true,
+            },
+            function (tabs) {
+              chrome.tabs.sendMessage(
+                tabs[0].id,
+                {
+                  action: "loadDocument",
+                },
+                function (response) {
+                  console.log(response);
+                  let depth = 0;
+                  response.list.forEach((item, index) => {
+                    item.depth = depth;
+                    if (item.type == "div") {
+                      depth++;
+                    } else if (item.type == "/div") {
+                      depth--;
+                    }
+                  });
+                  _this.page = response;
+                  resolve(_this.page);
+                }
+              );
+            }
+          );
+        });
       },
       refresh() {
-        this.refreshItems = true
-        this.items = []
-        const _this = this
+        this.refreshItems = true;
+        this.items = [];
+        const _this = this;
         chrome.runtime.sendMessage(
           {
             action: "reloadItems",
           },
           function (response) {
-            console.log(response, chrome.runtime.lastError)
-            _this.setItems(JSON.parse(response))
-            _this.refreshItems = false
+            console.log(response, chrome.runtime.lastError);
+            _this.setItems(JSON.parse(response));
+            _this.refreshItems = false;
           }
-        )
+        );
       },
       switchHiddenDom(event, hiddenDom, item) {
-        console.log(event, hiddenDom, item)
+        console.log(event, hiddenDom, item);
         // 交给background处理
         chrome.runtime.sendMessage({
           action: "switchHiddenDom",
@@ -906,10 +971,10 @@ document.addEventListener("DOMContentLoaded", function () {
             hiddenDom,
             item,
           },
-        })
+        });
       },
       switchStyle(event, style, item) {
-        console.log(event, style, item)
+        console.log(event, style, item);
         // 交给background处理
         chrome.runtime.sendMessage({
           action: "switchStyle",
@@ -917,11 +982,11 @@ document.addEventListener("DOMContentLoaded", function () {
             style,
             item,
           },
-        })
+        });
       },
       deleteLocalHiddenDom(event, hiddenDom, item) {
-        console.log(event, hiddenDom, item)
-        const _this = this
+        console.log(event, hiddenDom, item);
+        const _this = this;
         if (confirm("确认删除吗")) {
           // 交给background处理
           chrome.runtime.sendMessage(
@@ -933,16 +998,16 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             },
             function (response) {
-              console.log("deleted", response)
-              item.hiddenDoms.splice(item.hiddenDoms.indexOf(hiddenDom), 1) // 更新本地
+              console.log("deleted", response);
+              item.hiddenDoms.splice(item.hiddenDoms.indexOf(hiddenDom), 1); // 更新本地
             }
-          )
+          );
         }
       },
       renameLocalHiddenDom(event, hiddenDom, item) {
-        console.log(event, hiddenDom, item)
-        const _this = this
-        const newName = prompt("请输入新名称", hiddenDom.name)
+        console.log(event, hiddenDom, item);
+        const _this = this;
+        const newName = prompt("请输入新名称", hiddenDom.name);
         if (newName) {
           // 交给background处理
           chrome.runtime.sendMessage(
@@ -955,15 +1020,15 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             },
             function (response) {
-              console.log("renamed", response)
-              hiddenDom.name = newName
+              console.log("renamed", response);
+              hiddenDom.name = newName;
             }
-          )
+          );
         }
       },
       deleteLocalItem(event, item) {
-        console.log(event, item)
-        const _this = this
+        console.log(event, item);
+        const _this = this;
         if (confirm("确认删除吗")) {
           // 交给background处理
           chrome.runtime.sendMessage(
@@ -974,17 +1039,17 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             },
             function (response) {
-              console.log("deleted", response)
+              console.log("deleted", response);
               // 本地清除
-              _this.items.splice(_this.items.indexOf(item), 1)
+              _this.items.splice(_this.items.indexOf(item), 1);
             }
-          )
+          );
         }
       },
       renameLocalItem(event, item) {
-        console.log(event, item)
-        const _this = this
-        const newName = prompt("请输入新名称", item.name)
+        console.log(event, item);
+        const _this = this;
+        const newName = prompt("请输入新名称", item.name);
         if (newName) {
           // 交给background处理
           chrome.runtime.sendMessage(
@@ -996,17 +1061,17 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             },
             function (response) {
-              console.log("renameed", response)
-              item.name = newName // 更新新名称
+              console.log("renameed", response);
+              item.name = newName; // 更新新名称
             }
-          )
+          );
         }
       },
       publishLocalItem(event, item) {
-        console.log(event, item)
+        console.log(event, item);
         const ans = confirm(
           "上线申请审核通过后自动上线展示，是否确认提交申请？"
-        )
+        );
         if (ans) {
           // 交给background处理
           chrome.runtime.sendMessage(
@@ -1017,14 +1082,14 @@ document.addEventListener("DOMContentLoaded", function () {
               },
             },
             function (response) {
-              console.log("published", response)
-              alert("已提交。")
+              console.log("published", response);
+              alert("已提交。");
             }
-          )
+          );
         }
       },
       highLightDom(pageItem, checked) {
-        const _this = this
+        const _this = this;
         chrome.tabs.sendMessage(
           _this.currentTab.id,
           {
@@ -1043,27 +1108,27 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           function (response) {
             // window.close();
-            console.log(response)
+            console.log(response);
           }
-        )
+        );
       },
       setItems(items) {
-        const currentHost = new URL(this.currentTab.url).host
+        const currentHost = new URL(this.currentTab.url).host;
         const sortitems = items.map((item) => {
-          item.isFitCurrentTab = currentHost.endsWith(item.host)
-          item.isShowDetail = item.isFitCurrentTab
-          return item
-        })
+          item.isFitCurrentTab = currentHost.endsWith(item.host);
+          item.isShowDetail = item.isFitCurrentTab;
+          return item;
+        });
 
         sortitems.sort(function (a, b) {
-          return a.isFitCurrentTab && !b.isFitCurrentTab ? -1 : 0
-        })
+          return a.isFitCurrentTab && !b.isFitCurrentTab ? -1 : 0;
+        });
 
-        this.items = sortitems
-        console.log(this.items)
+        this.items = sortitems;
+        console.log(this.items);
       },
       startRead() {
-        const _this = this
+        const _this = this;
         chrome.tabs.sendMessage(
           _this.currentTab.id,
           {
@@ -1071,12 +1136,12 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           function (response) {
             // window.close();
-            console.log(response)
+            console.log(response);
           }
-        )
+        );
       },
     },
-  })
+  });
 
-  vue.$mount("#app")
-})
+  vue.$mount("#app");
+});
