@@ -642,16 +642,16 @@ document.addEventListener("DOMContentLoaded", function () {
               class: "ctrl m-2",
             },
             [
-              h(
-                "button",
-                {
-                  class: "bg-gray-200 hover:bg-gray-100 px-2 py-1 mr-2",
-                  on: {
-                    click: _this.handleCopyShareCardImg,
-                  },
-                },
-                ["复制"]
-              ),
+              // h(
+              //   "button",
+              //   {
+              //     class: "bg-gray-200 hover:bg-gray-100 px-2 py-1 mr-2",
+              //     on: {
+              //       click: _this.handleCopyShareCardImg,
+              //     },
+              //   },
+              //   ["复制"]
+              // ),
               h(
                 "button",
                 {
