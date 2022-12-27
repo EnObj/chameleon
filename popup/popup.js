@@ -1033,7 +1033,9 @@ document.addEventListener("DOMContentLoaded", function () {
         this.$refs.shareCardDemo.style.display = "block";
         const canvas = (this.shareCardCanvas = await html2canvas(
           this.$refs.shareCardDemo,
-          {}
+          {
+            scale: 3 // 清晰度更高
+          }
         ));
         // 插入到文档里面
         this.$refs.shareCardDemo.style.display = "none";
