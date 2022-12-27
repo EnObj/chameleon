@@ -85,7 +85,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 style: "height: calc(100% - 42px);",
               },
             },
-            _this.items.map((item) => {
+            // 包含内容的才会被展示
+            _this.items.filter(item=>(item.hiddenDoms.length || item.styles.length)).map((item) => {
               const itemHeader = [
                 h(
                   "input",
