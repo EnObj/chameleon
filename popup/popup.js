@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     data: {
       items: [],
       refreshItems: false,
-      currentNav: "mine",
+      currentNav: "share",
       page: {
         list: [],
         title: "",
@@ -886,74 +886,6 @@ document.addEventListener("DOMContentLoaded", function () {
           h(
             "div",
             {
-              class: "navs bg-gray-300 p-2 flex-none text-center",
-            },
-            [
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "mine",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "mine";
-                    },
-                  },
-                },
-                ["变色龙"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "create",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "create";
-                    },
-                  },
-                },
-                ["DIY"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "read",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "read";
-                    },
-                  },
-                },
-                ["短书"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "share",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "share";
-                    },
-                  },
-                },
-                ["分享"]
-              ),
-            ]
-          ),
-          h(
-            "div",
-            {
               class: "flex-auto h-full overflow-auto",
             },
             [tabs[_this.currentNav]]
@@ -1007,15 +939,18 @@ document.addEventListener("DOMContentLoaded", function () {
           _this.currentTab.id = tabs[0].id;
         }
       );
-      chrome.runtime.sendMessage(
-        {
-          action: "loadItems",
-        },
-        function (response) {
-          console.log(response, chrome.runtime.lastError);
-          _this.setItems(JSON.parse(response));
-        }
-      );
+      this.loadDom().then(() => {
+        this.shareByCard();
+      });
+      // chrome.runtime.sendMessage(
+      //   {
+      //     action: "loadItems",
+      //   },
+      //   function (response) {
+      //     console.log(response, chrome.runtime.lastError);
+      //     _this.setItems(JSON.parse(response));
+      //   }
+      // );
     },
     methods: {
       async shareByCard() {
