@@ -1,13 +1,13 @@
 {
-    "name": "变色龙-一键给网站变装",
-    "version": "0.0.1.0",
+    "name": "二维码卡片分享",
+    "version": "0.0.1",
     "manifest_version": 3,
-    "description": "An extension to help you change what your website look like.",
+    "description": "通过生成带二维码的卡片，帮助用户自由分享喜欢的网页。",
     "icons": {
-        "16": "icons/nasapod16x16.png",
-        "32": "icons/nasapod32x32.png",
-        "48": "icons/nasapod48x48.png",
-        "128": "icons/nasapod128x128.png"
+        "16": "icons/logo-16px.png",
+        "32": "icons/logo-32px.png",
+        "48": "icons/logo-48px.png",
+        "120": "icons/logo-120px.png"
     },
     "action": {
         "default_popup": "popup/popup.html"
@@ -22,5 +22,5 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["tabs", "storage"]
+    "permissions": ["tabs"]
 }
