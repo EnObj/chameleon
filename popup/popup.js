@@ -840,6 +840,7 @@ document.addEventListener("DOMContentLoaded", function () {
                           attrs: {
                             for: item.insideId,
                           },
+                          class: 'break-all'
                         },
                         [item.content]
                       ),
