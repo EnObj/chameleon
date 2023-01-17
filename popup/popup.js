@@ -675,7 +675,7 @@ document.addEventListener("DOMContentLoaded", function () {
           h(
             "div",
             {
-              class: "share-card-demo m-2 p-2 hidden",
+              class: "share-card-demo m-2 p-2 hidden border-4 border-dashed border-gray-300",
               style: {
                 backgroundColor: _this.shardCardStyle.bg,
               },
