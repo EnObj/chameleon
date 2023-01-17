@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       {
                         class: "text-xs",
                       },
-                      ["By 变色龙@chrome插件"]
+                      ["By 二维码卡片分享@chrome插件"]
                     ),
                   ]),
                   h("div", {}, [
