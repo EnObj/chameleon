@@ -48,7 +48,7 @@ Vue.component("share-card-console", {
                 click: _this.handleDownloadShareCardImg,
               },
             },
-            ["下载"]
+            ["下载卡片"]
           ),
           h(
             "span",
