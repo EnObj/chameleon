@@ -21,7 +21,7 @@ chrome.contextMenus.create({
     "id": "shareByCard",
 	"type" : "normal",
     "contexts": ["page", "selection", "image"],
-	"title" : "二维码分享"
+	"title" : "二维码卡片分享"
 });
 
 chrome.contextMenus.onClicked.addListener(function(info, tab){

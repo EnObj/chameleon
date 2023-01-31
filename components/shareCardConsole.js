@@ -127,7 +127,7 @@ Vue.component("share-card-console", {
                   {
                     class: "text-xs",
                   },
-                  ["By 变色龙@chrome插件"]
+                  ["By 二维码卡片分享@chrome插件"]
                 ),
               ]),
               h("div", {}, [
