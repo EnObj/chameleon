@@ -78,6 +78,7 @@ Vue.component("share-card-console", {
             },
             [_this.shareCardContent.title]
           ),
+
           ..._this.shareCardContent.items.map((item) =>
             h(
               "div",
@@ -86,6 +87,25 @@ Vue.component("share-card-console", {
               },
               [item.content]
             )
+          ),
+          h(
+            "div",
+            {
+              class: "mt-2",
+            },
+            [
+              _this.shareCardContent.imgUrl
+                ? h(
+                    "img",
+                    {
+                      domProps: {
+                        src: _this.shareCardContent.imgUrl,
+                      },
+                    },
+                    []
+                  )
+                : "",
+            ]
           ),
           h(
             "div",
@@ -231,6 +251,8 @@ Vue.component("share-card-console", {
         this.$refs.shareCardDemo,
         {
           scale: 3, // 清晰度更高
+          allowTaint: true,
+          useCORS: true,
         }
       ))
       // 插入到文档里面
