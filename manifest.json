@@ -1,6 +1,6 @@
 {
     "name": "二维码卡片分享",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "manifest_version": 3,
     "description": "通过生成带二维码的卡片，帮助用户自由分享喜欢的网页。",
     "icons": {
