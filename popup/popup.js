@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     click: _this.refresh,
                   },
                 },
-                ["刷新皮肤列表" + (_this.refreshItems ? "..." : "")]
+                ["刷新列表" + (_this.refreshItems ? "..." : "")]
               ),
             ]
           ),
