@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 {
                   class: "bg-green-50",
                 },
-                ["chameleon"]
+                ["网站新皮肤"]
               ),
               h(
                 "button",
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     click: _this.refresh,
                   },
                 },
-                ["刷新" + (_this.refreshItems ? "..." : "")]
+                ["刷新皮肤列表" + (_this.refreshItems ? "..." : "")]
               ),
             ]
           ),
@@ -697,76 +697,7 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           class: "w-80 h-96 body flex items-stretch overflow-hidden",
         },
-        [
-          h(
-            "div",
-            {
-              class: "navs bg-gray-300 p-2 flex-none text-center",
-            },
-            [
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "mine",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "mine"
-                    },
-                  },
-                },
-                ["变色龙"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "create",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "create"
-                    },
-                  },
-                },
-                ["DIY"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "read",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "read"
-                    },
-                  },
-                },
-                ["短书"]
-              ),
-              h(
-                "div",
-                {
-                  class: {
-                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
-                    "bg-green-50": _this.currentNav == "share",
-                  },
-                  on: {
-                    click() {
-                      _this.currentNav = "share"
-                    },
-                  },
-                },
-                ["分享"]
-              ),
-            ]
-          ),
-          h(
+        [h(
             "div",
             {
               class: "flex-auto h-full overflow-auto",
