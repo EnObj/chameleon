@@ -17,21 +17,21 @@ var selection = {
     pageUrl: ''
 }
 // 右键菜单
-chrome.contextMenus.create({
-    "id": "shareByCard",
-	"type" : "normal",
-    "contexts": ["page", "selection", "image"],
-	"title" : "二维码分享"
-});
+// chrome.contextMenus.create({
+//     "id": "shareByCard",
+// 	"type" : "normal",
+//     "contexts": ["page", "selection", "image"],
+// 	"title" : "二维码分享"
+// });
 
-chrome.contextMenus.onClicked.addListener(function(info, tab){
-    console.log(info, tab);
-    selection.pageTitle = tab.title;
-    selection.pageUrl = tab.url;
-    selection.text = info.selectionText;
-    selection.srcUrl = info.srcUrl;
-    chrome.tabs.create({url:"page/share.html"});
-})
+// chrome.contextMenus.onClicked.addListener(function(info, tab){
+//     console.log(info, tab);
+//     selection.pageTitle = tab.title;
+//     selection.pageUrl = tab.url;
+//     selection.text = info.selectionText;
+//     selection.srcUrl = info.srcUrl;
+//     chrome.tabs.create({url:"page/share.html"});
+// })
 
 function dispacheTab(tabId) {
     loadItems().then(function (items) {
