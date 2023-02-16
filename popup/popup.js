@@ -695,7 +695,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return h(
         "div",
         {
-          class: "w-80 h-96 body flex items-stretch overflow-hidden",
+          class: "w-80 body flex items-stretch overflow-hidden",
         },
         [h(
             "div",
