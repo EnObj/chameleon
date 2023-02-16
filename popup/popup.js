@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
               h(
                 "div",
                 {
-                  class: "bg-green-50",
+                  class: "text-lg",
                 },
                 ["网站新皮肤"]
               ),
