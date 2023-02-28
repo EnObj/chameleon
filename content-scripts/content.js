@@ -26,6 +26,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
     if (request.action == 'switchCountdown'){
         if(p5Canvas.style('display') == 'none'){
+            if(request.data && request.data.comingDate){
+                comingDate = new Date(request.data.comingDate)
+            }
             p5Canvas.style('display', 'block')
         }else{
             p5Canvas.style('display', 'none')
@@ -226,6 +229,7 @@ var chameleonReader = {
 
 let myFont;
 let p5Canvas;
+var comingDate = new Date(Date.now() + 1000 * 60 * 60 * 24)
 function preload () {
     myFont = loadFont('https://enobj-cdn-1252108641.cos.ap-nanjing.myqcloud.com/pabellona-c-triplex.ttf');
 }
@@ -262,9 +266,6 @@ function draw () {
 }
 
 function calculateRemainingTime () {
-    const comingYear = new Date().getFullYear() + 1;
-    const comingDate = new Date(`Jan 1, ${comingYear} 00:00:00`);
-
     const now = new Date();
     const remainingTime = comingDate.getTime() - now.getTime();
     const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));

@@ -698,6 +698,24 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             [
               h(
+                "input",
+                {
+                  attrs: {
+                    type: "datetime-local"
+                  },
+                  ref: 'comingDate'
+                },
+                []
+              ),
+            ]
+          ),
+          h(
+            "div",
+            {
+              class: "text-center my-20",
+            },
+            [
+              h(
                 "button",
                 {
                   attrs: {
@@ -1102,6 +1120,9 @@ document.addEventListener("DOMContentLoaded", function () {
           _this.currentTab.id,
           {
             action: "switchCountdown",
+            data: {
+              comingDate: _this.$refs.comingDate.value
+            }
           },
           function (response) {
             // window.close();
