@@ -24,6 +24,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.style) {
         handleStyle(request.style, request.host)
     }
+    if (request.action == 'switchCountdown'){
+        if(p5Canvas.style('display') == 'none'){
+            p5Canvas.style('display', 'block')
+        }else{
+            p5Canvas.style('display', 'none')
+        }
+        console.log(p5Canvas.style('display'));
+    }
 });
 
 // 直接渲染
@@ -217,23 +225,24 @@ var chameleonReader = {
 }
 
 let myFont;
+let p5Canvas;
 function preload () {
     myFont = loadFont('https://enobj-cdn-1252108641.cos.ap-nanjing.myqcloud.com/pabellona-c-triplex.ttf');
 }
 
 function setup () {
     const width = 400, height = 100;
-    const c = createCanvas(width, height);
+    p5Canvas = createCanvas(width, height);
     const x = Math.floor(screen.availWidth / 2 - width / 2)
     const y = Math.floor(screen.availHeight / 2 - height / 2)
     console.log('三体倒计时', x, y)
-    c.position(x, y, 'fixed');
+    p5Canvas.position(x, y, 'fixed');
 }
 
 function draw () {
     clear();
     background('rgba(100%,0%,100%,0)');
-    
+
     fill('#F2921D');
     textSize(60);
     textAlign(CENTER, CENTER);

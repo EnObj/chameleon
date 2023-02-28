@@ -684,12 +684,42 @@ document.addEventListener("DOMContentLoaded", function () {
           ]
         ),
       ])
+      // 倒计时模块
+      const countdown = h(
+        "div",
+        {
+          class: "read",
+        },
+        [
+          h(
+            "div",
+            {
+              class: "text-center my-20",
+            },
+            [
+              h(
+                "button",
+                {
+                  attrs: {
+                    class: "bg-gray-200 px-2 py-1",
+                  },
+                  on: {
+                    click: _this.switchCountdown,
+                  },
+                },
+                ["开始/关闭"]
+              ),
+            ]
+          ),
+        ]
+      )
 
       const tabs = {
         mine: contentMine,
         create: contentCreate,
         read: contentRead,
         share: contentShare,
+        countdown
       }
 
       return h(
@@ -763,6 +793,21 @@ document.addEventListener("DOMContentLoaded", function () {
                   },
                 },
                 ["分享"]
+              ),
+              h(
+                "div",
+                {
+                  class: {
+                    "nav nav-mine cursor-pointer p-1 hover:text-gray-700 rounded": true,
+                    "bg-green-50": _this.currentNav == "countdown",
+                  },
+                  on: {
+                    click() {
+                      _this.currentNav = "countdown"
+                    },
+                  },
+                },
+                ["倒计时"]
               ),
             ]
           ),
@@ -1051,6 +1096,19 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         )
       },
+      switchCountdown(){
+        const _this = this
+        chrome.tabs.sendMessage(
+          _this.currentTab.id,
+          {
+            action: "switchCountdown",
+          },
+          function (response) {
+            // window.close();
+            console.log(response)
+          }
+        )
+      }
     },
   })
 
