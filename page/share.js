@@ -11,21 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const _this = this
       // 分享二维码卡片模块
       const contentShare = h(
-        "div",
+        "share-card-console",
         {
-          class: "w-80",
+          props: {
+            shareCardContent: _this.shareCardContent,
+          },
         },
-        [
-          h(
-            "share-card-console",
-            {
-              props: {
-                shareCardContent: _this.shareCardContent,
-              },
-            },
-            []
-          ),
-        ]
+        []
       )
 
       return h(

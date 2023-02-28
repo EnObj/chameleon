@@ -13,16 +13,33 @@ Vue.component("share-card-console", {
           "rgb(255, 120, 0)",
           "#c7158577",
         ],
+        width: [
+          {
+            label: '小',
+            value: 300
+          },
+          {
+            label: '中',
+            value: 500
+          },
+          {
+            label: '大',
+            value: 1000
+          }
+        ]
       },
       shardCardStyle: {
         bg: "#90ee90", // 背景
+        width: 300, // 宽度
       },
     }
   },
   props: ["shareCardContent"],
   render(h) {
     const _this = this
-    return h("div", {}, [
+    return h("div", {
+      class: ''
+    }, [
       // 复制or下载
       h(
         "div",
@@ -67,6 +84,7 @@ Vue.component("share-card-console", {
             "share-card-demo m-2 p-2 hidden border-4 border-dashed border-gray-300",
           style: {
             backgroundColor: _this.shardCardStyle.bg,
+            width: _this.shardCardStyle.width + 'px',
           },
           ref: "shareCardDemo",
         },
@@ -154,8 +172,10 @@ Vue.component("share-card-console", {
           h(
             "img",
             {
-              class: "w-80",
               ref: "shareCardImg",
+              style: {
+                width: _this.shardCardStyle.width + 'px',
+              }
             },
             []
           ),
@@ -178,7 +198,7 @@ Vue.component("share-card-console", {
           h(
             "div",
             {
-              class: "card-style-bg flex justify-between",
+              class: "card-style-bg flex justify-start gap-2",
             },
             _this.shardCardStyleOptions.bg.map((bg) => {
               return h(
@@ -201,25 +221,43 @@ Vue.component("share-card-console", {
           ),
         ]
       ),
-      // 确认按钮
-      // h(
-      //   "div",
-      //   {
-      //     class: "ctrl text-center mt-2",
-      //   },
-      //   [
-      //     h(
-      //       "button",
-      //       {
-      //         class: "bg-gray-200 hover:bg-gray-100 px-2 py-1",
-      //         on: {
-      //           click: _this.shareByCard,
-      //         },
-      //       },
-      //       ["刷新"]
-      //     ),
-      //   ]
-      // ),
+      // 选择宽度
+      h(
+        "div",
+        {
+          class: "card-style m-2",
+        },
+        [
+          h(
+            "div",
+            {
+              class: "border-gray-400 border-l-2 my-2 pl-1",
+            },
+            ["选择宽度"]
+          ),
+          h(
+            "div",
+            {
+              class: "card-style-bg flex justify-start gap-2",
+            },
+            _this.shardCardStyleOptions.width.map((width) => {
+              return h(
+                "div",
+                {
+                  class: "px-2 py-1 cursor-pointer bg-gray-200 hover:bg-gray-100 text-center",
+                  on: {
+                    // 切换背景色
+                    click() {
+                      _this.shardCardStyle.width = width.value
+                    },
+                  },
+                },
+                [width.label]
+              )
+            })
+          ),
+        ]
+      ),
     ])
   },
   watch: {
