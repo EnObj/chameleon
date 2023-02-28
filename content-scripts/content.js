@@ -215,3 +215,59 @@ var chameleonReader = {
         }
     }
 }
+
+let myFont;
+function preload () {
+    myFont = loadFont('https://enobj-cdn-1252108641.cos.ap-nanjing.myqcloud.com/pabellona-c-triplex.ttf');
+}
+
+function setup () {
+    const width = 400, height = 100;
+    const c = createCanvas(width, height);
+    const x = Math.floor(screen.availWidth / 2 - width / 2)
+    const y = Math.floor(screen.availHeight / 2 - height / 2)
+    console.log('三体倒计时', x, y)
+    c.position(x, y, 'fixed');
+}
+
+function draw () {
+    clear();
+    background('rgba(100%,0%,100%,0)');
+    
+    fill('#F2921D');
+    textSize(60);
+    textAlign(CENTER, CENTER);
+    textFont(myFont);
+
+    const remainingTime = calculateRemainingTime();
+    if (remainingTime.remainingTime > 1000) {
+        const timeText =
+            "" +
+            getTrueNumber(remainingTime.hours) +
+            " " +
+            getTrueNumber(remainingTime.mins) +
+            " " +
+            getTrueNumber(remainingTime.secs);
+        text(timeText, width / 2, height / 2)
+    }
+}
+
+function calculateRemainingTime () {
+    const comingYear = new Date().getFullYear() + 1;
+    const comingDate = new Date(`Jan 1, ${comingYear} 00:00:00`);
+
+    const now = new Date();
+    const remainingTime = comingDate.getTime() - now.getTime();
+    const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+        (remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const mins = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+    const secs = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+    return { hours: days * 24 + hours, mins, secs, remainingTime };
+}
+
+function getTrueNumber (num) {
+    return num < 10 ? "0" + num : num;
+}

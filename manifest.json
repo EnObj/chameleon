@@ -17,7 +17,7 @@
             "<all_urls>"
         ],
         "run_at": "document_start",
-        "js": ["js/jquery-3.6.0.min.js", "content-scripts/content.js"]
+        "js": ["js/jquery-3.6.0.min.js", "js/p5.min.js", "content-scripts/content.js"]
     }],
     "background": {
         "service_worker": "background.js"
