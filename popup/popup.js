@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
             {
               attrs: {
                 class: "items overflow-auto",
-                style: "height: calc(100% - 42px);",
+                style: "height: calc(100% - 44px);",
               },
             },
             // 包含内容的才会被展示
