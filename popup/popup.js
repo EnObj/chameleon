@@ -15,6 +15,10 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       clipPageItems: [],
       readItemIndex: 0, // 正在阅读的段落
+      countdownConfig: {
+        show: true, // 倒计时组件是否显示
+        comingDate: Date.now() + 1000 * 60 * 60 * 24 // 24小事后
+      }
     },
     computed: {
       shareCardContent() {
@@ -701,7 +705,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 "input",
                 {
                   attrs: {
-                    type: "datetime-local"
+                    type: "datetime-local",
+                    value: _this.countdownConfig.comingDate
                   },
                   ref: 'comingDate'
                 },
@@ -715,20 +720,17 @@ document.addEventListener("DOMContentLoaded", function () {
               class: "text-center my-20",
             },
             [
-              h(
-                "button",
-                {
-                  attrs: {
-                    class: "bg-gray-200 px-2 py-1",
-                  },
-                  on: {
-                    click: _this.switchCountdown,
-                  },
+              h('el-switch', {
+                props: {
+                  value: _this.countdownConfig.show,
                 },
-                ["开始/关闭"]
-              ),
+                on: {
+                  change: _this.switchCountdown
+                }
+              }, [])
             ]
           ),
+          
         ]
       )
 
@@ -884,6 +886,18 @@ document.addEventListener("DOMContentLoaded", function () {
         function (response) {
           console.log(response, chrome.runtime.lastError)
           _this.setItems(JSON.parse(response))
+        }
+      )
+      // 查询本地保存的countdown设置
+      chrome.runtime.sendMessage(
+        {
+          action: "getCountdownConfig",
+        },
+        function (response) {
+          console.log(response, chrome.runtime.lastError)
+          if(response){
+            _this.countdownConfig = response;
+          }
         }
       )
     },
@@ -1114,19 +1128,37 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         )
       },
-      switchCountdown(){
-        const _this = this
-        chrome.tabs.sendMessage(
-          _this.currentTab.id,
+      switchCountdown(show){
+        this.countdownConfig.show = show;
+        this.countdownConfig.comingDate = this.$refs.comingDate.value;
+        // 保存状态
+        chrome.runtime.sendMessage(
           {
-            action: "switchCountdown",
+            action: "saveCountdownConfig",
             data: {
-              comingDate: _this.$refs.comingDate.value
-            }
+              config: this.countdownConfig,
+            },
           },
           function (response) {
-            // window.close();
-            console.log(response)
+            console.log("saved", response)
+          }
+        )
+        // 作用到页面上
+        const data = {
+          ...this.countdownConfig
+        }
+        chrome.tabs.query(
+          {},
+          function (tabs) {
+            tabs.forEach(tab=>{
+              chrome.tabs.sendMessage(
+                tab.id,
+                {
+                  action: "switchCountdown",
+                  data
+                }
+              )
+            })
           }
         )
       }

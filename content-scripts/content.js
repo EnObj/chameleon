@@ -25,15 +25,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         handleStyle(request.style, request.host)
     }
     if (request.action == 'switchCountdown'){
-        if(p5Canvas.style('display') == 'none'){
-            if(request.data && request.data.comingDate){
-                comingDate = new Date(request.data.comingDate)
-            }
-            p5Canvas.style('display', 'block')
-        }else{
-            p5Canvas.style('display', 'none')
+        if(request.data && request.data.comingDate){
+            comingDate = new Date(request.data.comingDate)
         }
-        console.log(p5Canvas.style('display'));
+        p5Canvas.style('display', request.data.show ? 'block' : 'none')
     }
 });
 
@@ -241,6 +236,19 @@ function setup () {
     const y = Math.floor(screen.availHeight / 2 - height / 2)
     console.log('三体倒计时', x, y)
     p5Canvas.position(x, y, 'fixed');
+
+    // 主动查询一次
+    chrome.runtime.sendMessage({
+        action: 'getCountdownConfig',
+    }, function (response) {
+      console.log(response, chrome.runtime.lastError)
+      if(response){
+        if(response.comingDate){
+            comingDate = new Date(response.comingDate)
+        }
+        p5Canvas.style('display', response.show ? 'block' : 'none')
+      }
+    });
 }
 
 function draw () {

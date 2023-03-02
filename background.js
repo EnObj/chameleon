@@ -172,7 +172,22 @@ chrome.runtime.onMessage.addListener(
             publishLocalItem(item).then(sendResponse)
         } else if (request.action == 'querySelection'){
             sendResponse(selection)
-        }
+        } else if (request.action == 'saveCountdownConfig'){
+            const {
+                config
+            } = request.data
+            // 本地存储用户设置
+            chrome.storage.sync.set({
+                [`countdown-config`]: config
+            })
+        } else if (request.action == 'getCountdownConfig'){
+            // 查询用户设置
+            chrome.storage.sync.get(`countdown-config`, function(result){
+                sendResponse(result['countdown-config'])
+            })
+            // 保持通道开放
+            return true
+        } 
     }
 );
 
