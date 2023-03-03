@@ -1,6 +1,6 @@
 {
     "name": "变色龙-一键给网站变装",
-    "version": "0.0.1.0",
+    "version": "0.0.2.0",
     "manifest_version": 3,
     "description": "An extension to help you change what your website look like.",
     "icons": {
