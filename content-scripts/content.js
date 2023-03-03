@@ -270,6 +270,8 @@ function draw () {
             " " +
             getTrueNumber(remainingTime.secs);
         text(timeText, width / 2, height / 2)
+    } else {
+        text('time over', width / 2, height / 2)
     }
 }
 
