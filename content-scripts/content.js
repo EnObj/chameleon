@@ -1,7 +1,7 @@
-console.log('i am chameleon.');
+// console.log('i am chameleon.');
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log(request);
+    // console.log(request);
     if (request.action == 'loadDocument') {
         const list = [{
             type: 'div',
@@ -39,7 +39,7 @@ chrome.runtime.sendMessage({
 
 function handleHiddenDom(hiddenDom, host) {
     if (location.host.endsWith(host)) {
-        console.log(host, hiddenDom);
+        // console.log(host, hiddenDom);
         const styleId = 'chameleon1-' + hiddenDom.name
         // 移除
         if (!hiddenDom.checked) {
@@ -57,7 +57,7 @@ function handleHiddenDom(hiddenDom, host) {
 
 function handleStyle(style, host) {
     if (location.host.endsWith(host)) {
-        console.log(host, style);
+        // console.log(host, style);
         const styleId = 'chameleon2-' + style.name
         // 移除
         if (!style.checked) {
@@ -234,14 +234,14 @@ function setup () {
     p5Canvas = createCanvas(width, height);
     const x = Math.floor(screen.availWidth / 2 - width / 2)
     const y = Math.floor(screen.availHeight / 2 - height / 2)
-    console.log('三体倒计时', x, y)
+    // console.log('三体倒计时', x, y)
     p5Canvas.position(x, y, 'fixed');
 
     // 主动查询一次
     chrome.runtime.sendMessage({
         action: 'getCountdownConfig',
     }, function (response) {
-      console.log(response, chrome.runtime.lastError)
+    //   console.log(response, chrome.runtime.lastError)
       if(response){
         if(response.comingDate){
             comingDate = new Date(response.comingDate)
