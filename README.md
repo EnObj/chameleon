@@ -9,9 +9,14 @@
 
 ## 截图
 ![截图](https://6465-dev-9g0suwuw61afb9f3-1252108641.tcb.qcloud.la/enobj/img/main.cb359a11.png)
+
 ## 安装
 - [edge浏览器](https://microsoftedge.microsoft.com/addons/detail/%E5%8F%98%E8%89%B2%E9%BE%99%E4%B8%80%E9%94%AE%E7%BB%99%E7%BD%91%E7%AB%99%E5%8F%98%E8%A3%85/afolkaeajjfnhjjpkmipjejnkfgfhoni)
 - [chrome浏览器](https://chrome.google.com/webstore/detail/%E5%8F%98%E8%89%B2%E9%BE%99-%E4%B8%80%E9%94%AE%E7%BB%99%E7%BD%91%E7%AB%99%E5%8F%98%E8%A3%85/fhfandefdeilokmhdebaiipcgmakpdpi)
+
+## 本地安装
+`git clone git@github.com:EnObj/chameleon.git`  
+下载完成后，在浏览器中打开插件安装页面，选择“加载解压缩的拓展”，选择项目根目录即可（安装完成后建议重启浏览器）。
 
 ## 功能架构
 - 变色龙
@@ -52,5 +57,5 @@
 - [ ]  追更（新模块）
 - [ ]  账户（新模块）
 
-### 参与贡献
+## 参与贡献
 提交issue或pull request
