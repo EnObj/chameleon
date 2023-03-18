@@ -236,6 +236,7 @@ function setup () {
     const y = Math.floor(screen.availHeight / 2 - height / 2)
     // console.log('三体倒计时', x, y)
     p5Canvas.position(x, y, 'fixed');
+    p5Canvas.style('pointer-events', 'none')
 
     // 主动查询一次
     chrome.runtime.sendMessage({
